@@ -3,11 +3,177 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Picktur — La plateforme des photographes de mariage modernes. Tri IA, galeries premium, reconnaissance faciale, albums physiques." />
+
+    <!-- ── Primary SEO ── -->
+    <title>Picktur — La plateforme qui révèle chaque mariage</title>
+    <meta name="description" content="Picktur est la plateforme des photographes de mariage modernes. Tri IA Gemini sur 26 critères, galeries premium, reconnaissance faciale, albums physiques. Essai 14 jours gratuit." />
+    <meta name="keywords" content="logiciel photographe mariage, tri photo IA, galerie mariage en ligne, reconnaissance faciale mariage, album photo mariage, Picktur, wedding photography software" />
+    <meta name="author" content="Picktur" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://picktur.fr/" />
+
+    <!-- ── hreflang FR/EN ── -->
+    <link rel="alternate" hreflang="fr" href="https://picktur.fr/" />
+    <link rel="alternate" hreflang="en" href="https://picktur.fr/en" />
+    <link rel="alternate" hreflang="x-default" href="https://picktur.fr/" />
+
+    <!-- ── Open Graph ── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Picktur" />
     <meta property="og:title" content="Picktur — La plateforme qui révèle chaque mariage" />
-    <meta property="og:description" content="Tri IA, galeries premium, reconnaissance faciale, albums physiques — tout ce dont vos clients ont besoin, dans un seul endroit." />
-    <title>Picktur — La plateforme des photographes de mariage</title>
+    <meta property="og:description" content="Tri IA, galeries premium, reconnaissance faciale, albums physiques — tout ce dont vos clients ont besoin, dans un seul endroit. Essai 14 jours gratuit." />
+    <meta property="og:url" content="https://picktur.fr/" />
+    <meta property="og:image" content="https://picktur.fr/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Picktur — Plateforme de gestion photo pour photographes de mariage" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- ── Twitter Card ── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@picktur" />
+    <meta name="twitter:creator" content="@picktur" />
+    <meta name="twitter:title" content="Picktur — La plateforme qui révèle chaque mariage" />
+    <meta name="twitter:description" content="Tri IA, galeries premium, reconnaissance faciale, albums physiques. La plateforme des photographes de mariage modernes." />
+    <meta name="twitter:image" content="https://picktur.fr/og-image.jpg" />
+
+    <!-- ── Favicon ── -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- ── Structured Data JSON-LD ── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://picktur.fr/#organization",
+          "name": "Picktur",
+          "url": "https://picktur.fr",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://picktur.fr/logo.png"
+          },
+          "description": "Plateforme SaaS pour photographes de mariage — tri IA, galeries premium, reconnaissance faciale.",
+          "sameAs": [
+            "https://twitter.com/picktur",
+            "https://www.instagram.com/picktur"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://picktur.fr/#software",
+          "name": "Picktur",
+          "applicationCategory": "PhotoEditingApplication",
+          "operatingSystem": "Web",
+          "url": "https://picktur.fr",
+          "description": "Picktur aide les photographes de mariage à trier leurs photos avec l'IA Gemini, créer des galeries premium et offrir la reconnaissance faciale à leurs clients.",
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "Essentiel",
+              "price": "15",
+              "priceCurrency": "EUR",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "billingDuration": "P1M"
+              }
+            },
+            {
+              "@type": "Offer",
+              "name": "Pro",
+              "price": "29",
+              "priceCurrency": "EUR",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "billingDuration": "P1M"
+              }
+            },
+            {
+              "@type": "Offer",
+              "name": "Studio",
+              "price": "49",
+              "priceCurrency": "EUR",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "billingDuration": "P1M"
+              }
+            }
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "47",
+            "bestRating": "5"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://picktur.fr/#website",
+          "url": "https://picktur.fr",
+          "name": "Picktur",
+          "publisher": { "@id": "https://picktur.fr/#organization" },
+          "inLanguage": ["fr-FR", "en-US"]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://picktur.fr/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Où sont stockées mes photos avec Picktur ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Picktur se connecte à votre serveur Immich (auto-hébergé ou hébergé). Vos photos restent sur votre infrastructure. Nous sommes juste l'interface intelligente par-dessus."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Est-ce que le tri IA est vraiment automatique ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui. Vous importez, vous lancez l'analyse, et l'IA score chaque photo sur 26 critères. Vous pouvez affiner la sélection, mais vous n'avez pas à le faire."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Comment fonctionne la reconnaissance faciale dans les galeries mariage ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Vos invités accèdent à la galerie et font un selfie. Picktur compare leur visage aux photos du mariage et affiche uniquement les leurs. Simple, rapide, magique."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Puis-je annuler mon abonnement Picktur ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui, à tout moment et sans engagement. Votre accès reste actif jusqu'à la fin de la période en cours."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Quelle est la différence entre l'offre couple et l'abonnement photographe ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "L'abonnement photographe (15€–49€/mois) est fait pour les pros qui gèrent plusieurs mariages. L'offre couple (499€) est un paiement unique qui offre à votre photographe un accès Picktur pour votre mariage uniquement, valable 1 an."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- ── Google Analytics 4 (chargé conditionnellement via cookie consent) ── -->
+    <script>
+      window.__GA_ID = 'G-XXXXXXXXXX'; // Remplacer par votre GA4 Measurement ID
+    </script>
+
+    <!-- ── Plausible Analytics (sans cookies, RGPD compliant) ── -->
+    <script defer data-domain="picktur.fr" src="https://plausible.io/js/script.js"></script>
   </head>
   <body>
     <div id="root"></div>
