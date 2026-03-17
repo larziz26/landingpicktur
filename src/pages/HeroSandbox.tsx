@@ -58,7 +58,7 @@ const QUALITY_ANNOTATIONS = [
     detail: "Visage identifié",
     color: "#E879A0",
     bg: "from-pink-500/90 to-rose-600/90",
-    points: 20,
+    points: 30,
     delay: 3.24,
   },
   {
@@ -70,20 +70,8 @@ const QUALITY_ANNOTATIONS = [
     detail: "Visage identifié",
     color: "#06B6D4",
     bg: "from-cyan-500/90 to-blue-600/90",
-    points: 20,
+    points: 30,
     delay: 4.44,
-  },
-  {
-    dot: { x: 46, y: 87 },         // bouquet center (Gemini: x=46%, y=89.9%)
-    badge: { x: 42, y: 56 },
-    lineEnd: { x: 47, y: 72 },
-    label: "Bouquet de fleurs",
-    value: "Détecté",
-    detail: "Élément clé identifié",
-    color: "#10B981",
-    bg: "from-emerald-500/90 to-teal-600/90",
-    points: 5,
-    delay: 5.64,
   },
 ];
 
@@ -154,7 +142,6 @@ const T = {
       { label: "Netteté", value: "97%", detail: "Mise au point parfaite" },
       { label: "Mariée détectée", value: "✓", detail: "Visage identifié" },
       { label: "Marié détecté", value: "✓", detail: "Visage identifié" },
-      { label: "Bouquet de fleurs", value: "Détecté", detail: "Élément clé identifié" },
     ],
     roles: ["Mariée", "Marié", "Témoin", "Famille"],
     scoreBadge: "Scoring de la photo",
@@ -177,7 +164,6 @@ const T = {
       { label: "Sharpness", value: "97%", detail: "Perfect focus" },
       { label: "Bride detected", value: "✓", detail: "Face identified" },
       { label: "Groom detected", value: "✓", detail: "Face identified" },
-      { label: "Flower bouquet", value: "Detected", detail: "Key element found" },
     ],
     roles: ["Bride", "Groom", "Witness", "Family"],
     scoreBadge: "Photo scoring",
@@ -377,7 +363,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             className="absolute"
             style={{
               left: `${a.badge.x}%`,
-              top: `${isMobile && i === 4 ? 43 : isMobile && i === 3 ? 20 : isMobile && i === 1 ? 36 : a.badge.y}%`,
+              top: `${isMobile && i === 3 ? 20 : isMobile && i === 1 ? 36 : a.badge.y}%`,
             }}
             initial={{ opacity: 0, x: i < 2 ? -18 : 18, scale: 0.85 }}
             animate={visibleAnnotations.includes(i) ? { opacity: 1, x: 0, scale: 1 } : {}}
