@@ -15,9 +15,9 @@ const copy = {
     nav: { features: "Fonctionnalités", pricing: "Tarifs", faq: "FAQ", login: "Connexion", cta: "Essai gratuit" },
     hero: {
       badge: "Spécialement conçu pour les photographes de mariage",
-      h1a: "La plateforme qui",
-      h1b: "révèle chaque mariage.",
-      sub: "Tri IA, galeries premium, reconnaissance faciale, albums physiques — tout ce dont vos clients ont besoin, dans un seul endroit.",
+      h1a: "Livrez plus vite.",
+      h1b: "L'expérience que vos clients n'oublieront pas.",
+      sub: "Picktur score vos photos par IA, identifie chaque visage et génère vos galeries. Livrez dès le lendemain : vos invités se retrouvent par selfie et vos clients sélectionnent leurs favoris pour l'album en un clic.",
       cta1: "Commencer gratuitement",
       cta2: "Voir la démo",
       proof: "+200 photographes l'utilisent déjà",
@@ -161,9 +161,9 @@ const copy = {
     nav: { features: "Features", pricing: "Pricing", faq: "FAQ", login: "Login", cta: "Start free" },
     hero: {
       badge: "Built for wedding photographers",
-      h1a: "The platform that",
-      h1b: "reveals every wedding.",
-      sub: "AI culling, premium galleries, face recognition, physical albums — everything your clients need, in one place.",
+      h1a: "Deliver faster.",
+      h1b: "The experience your clients will never forget.",
+      sub: "Picktur scores your photos with AI, identifies every face and generates your galleries. Deliver the next day: guests find themselves by selfie and clients pick their album favorites in one click.",
       cta1: "Start for free",
       cta2: "Watch demo",
       proof: "200+ photographers already use it",
@@ -789,17 +789,17 @@ export default function LandingPage() {
             </div>
 
             <h1 className="text-5xl md:text-6xl font-bold text-stone-900 leading-[1.08] tracking-tight mb-4">
-              La plateforme tout-en-un pour{" "}
+              {tr.hero.h1a}<br />
               <span className="relative inline-block">
                 <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-violet-500">
-                  photographes de mariage.
+                  {tr.hero.h1b}
                 </span>
                 <span className="absolute inset-x-0 bottom-1 h-3 bg-gradient-to-r from-rose-200/60 to-violet-200/60 -z-10 blur-sm rounded" />
               </span>
             </h1>
 
             <p className="text-lg text-stone-500 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Triez avec l'IA, livrez des galeries premium et offrez à chaque invité ses photos — en quelques minutes.
+              {tr.hero.sub}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
