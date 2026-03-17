@@ -523,26 +523,32 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
               >
-                {/* Marie + Sophie on the left */}
+                {/* Marie + Sophie on the left — placeholders reserve space to prevent layout shift */}
                 <div className="flex gap-1">
                   {[2, 0].map(i => {
                     const f = FACE_DETECTIONS[i];
-                    return visibleFaces.includes(i) ? (
-                      <motion.div
-                        key={`gallery-${f.name}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
-                        className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg px-1.5 py-1 flex items-center gap-1 cursor-pointer hover:bg-black/70 transition-all"
-                        style={{ borderColor: `${f.color}55` }}
-                        onClick={() => setActiveGallery(activeGallery === i ? null : i)}
-                      >
-                        <div className="w-5 h-5 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
-                          <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="text-white font-semibold text-[8px] leading-tight">{f.name}</div>
-                      </motion.div>
-                    ) : <div key={`empty-${i}`} />;
+                    return (
+                      <div key={`slot-${i}`} style={{ minWidth: 58 }}>
+                        <AnimatePresence>
+                          {visibleFaces.includes(i) && (
+                            <motion.div
+                              key={`gallery-${f.name}`}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                              className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg px-1.5 py-1 flex items-center gap-1 cursor-pointer hover:bg-black/70 transition-all"
+                              style={{ borderColor: `${f.color}55` }}
+                              onClick={() => setActiveGallery(activeGallery === i ? null : i)}
+                            >
+                              <div className="w-5 h-5 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
+                                <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div className="text-white font-semibold text-[8px] leading-tight">{f.name}</div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
                   })}
                 </div>
 
@@ -552,26 +558,32 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                   <span className="text-emerald-300 text-[8px] font-semibold">{visibleFaces.length}/{FACE_DETECTIONS.length}</span>
                 </div>
 
-                {/* Thomas + Luc on the right */}
+                {/* Thomas + Luc on the right — placeholders reserve space */}
                 <div className="flex gap-1">
                   {[1, 3].map(i => {
                     const f = FACE_DETECTIONS[i];
-                    return visibleFaces.includes(i) ? (
-                      <motion.div
-                        key={`gallery-${f.name}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
-                        className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg px-1.5 py-1 flex items-center gap-1 cursor-pointer hover:bg-black/70 transition-all"
-                        style={{ borderColor: `${f.color}55` }}
-                        onClick={() => setActiveGallery(activeGallery === i ? null : i)}
-                      >
-                        <div className="w-5 h-5 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
-                          <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="text-white font-semibold text-[8px] leading-tight">{f.name}</div>
-                      </motion.div>
-                    ) : <div key={`empty-${i}`} />;
+                    return (
+                      <div key={`slot-${i}`} style={{ minWidth: 58 }}>
+                        <AnimatePresence>
+                          {visibleFaces.includes(i) && (
+                            <motion.div
+                              key={`gallery-${f.name}`}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                              className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg px-1.5 py-1 flex items-center gap-1 cursor-pointer hover:bg-black/70 transition-all"
+                              style={{ borderColor: `${f.color}55` }}
+                              onClick={() => setActiveGallery(activeGallery === i ? null : i)}
+                            >
+                              <div className="w-5 h-5 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
+                                <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div className="text-white font-semibold text-[8px] leading-tight">{f.name}</div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
                   })}
                 </div>
               </motion.div>
