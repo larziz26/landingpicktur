@@ -527,7 +527,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
               exit={{ opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 22, delay: 0.3 }}
             >
-              {f.labelBelow && <div className="w-px h-2 mx-auto hidden md:block" style={{ background: f.color }} />}
+              {f.labelBelow && !isMobile && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
               <div
                 className="rounded-xl px-2 py-1 md:px-3 md:py-2 shadow-xl border border-white/20 backdrop-blur-md text-center min-w-[60px] md:min-w-[90px]"
                 style={{ background: `${f.color}cc` }}
@@ -535,7 +535,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 <div className="text-white font-bold text-[10px] md:text-xs">{f.name}</div>
                 <div className="text-white/70 text-[8px] md:text-[10px]">{tr.roles[i]}</div>
               </div>
-              {!f.labelBelow && <div className="w-px h-2 mx-auto hidden md:block" style={{ background: f.color }} />}
+              {!f.labelBelow && !isMobile && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
             </motion.div>
           ) : null
         )}
