@@ -1,163 +1,304 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useInView, useAnimation } from "framer-motion";
-import { Eye, Layers, User, Check, Zap, Star, Camera, ScanFace } from "lucide-react";
+import { motion, AnimatePresence, useInView, useAnimation, animate } from "framer-motion";
+import { Eye, Layers, User, Check, Zap, Star, Camera, ScanFace, RefreshCw } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONCEPT 1 — Vision Augmentée
-// Full-screen hero with animated AI annotation lines + glassmorphism badges
+// Photo plein-écran. Séquence animée : lignes fléchées → badges → score monte
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ANNOTATIONS = [
   {
-    // Dot on the photo (% of container)
-    dot: { x: 38, y: 34 },
-    // Badge position
-    badge: { x: 5, y: 12 },
+    // Point sur la photo (% du container)
+    dot: { x: 37, y: 26 },
+    // Coin du badge (% du container)
+    badge: { x: 2, y: 5 },
+    // Centre approximatif du badge pour la ligne
+    lineEnd: { x: 18, y: 10 },
+    label: "Yeux ouverts",
+    value: "✓",
+    detail: "Les deux sujets détectés",
+    color: "#6366F1",
+    bg: "from-indigo-600/90 to-violet-600/90",
+    points: 15,
+    delay: 0.6,
+  },
+  {
+    dot: { x: 50, y: 48 },
+    badge: { x: 2, y: 38 },
+    lineEnd: { x: 18, y: 43 },
     label: "Netteté",
-    value: "98%",
-    icon: Eye,
-    color: "from-violet-500/80 to-violet-600/80",
-    delay: 0.4,
+    value: "97%",
+    detail: "Mise au point parfaite",
+    color: "#8B5CF6",
+    bg: "from-violet-600/90 to-purple-600/90",
+    points: 18,
+    delay: 1.6,
   },
   {
-    dot: { x: 74, y: 26 },
-    badge: { x: 72, y: 8 },
-    label: "Isolation sujet",
-    value: "Haute",
-    icon: Layers,
-    color: "from-emerald-500/80 to-emerald-600/80",
-    delay: 0.8,
+    dot: { x: 30, y: 32 },
+    badge: { x: 68, y: 5 },
+    lineEnd: { x: 72, y: 10 },
+    label: "Mariée présente",
+    value: "✓",
+    detail: "Visage identifié",
+    color: "#E879A0",
+    bg: "from-pink-500/90 to-rose-600/90",
+    points: 20,
+    delay: 2.6,
   },
   {
-    dot: { x: 50, y: 62 },
-    badge: { x: 38, y: 78 },
-    label: "Score Picktur",
-    value: "96 / 100",
-    icon: Star,
-    color: "from-amber-500/80 to-orange-500/80",
-    delay: 1.2,
+    dot: { x: 64, y: 30 },
+    badge: { x: 68, y: 38 },
+    lineEnd: { x: 72, y: 43 },
+    label: "Marié présent",
+    value: "✓",
+    detail: "Visage identifié",
+    color: "#06B6D4",
+    bg: "from-cyan-500/90 to-blue-600/90",
+    points: 20,
+    delay: 3.6,
+  },
+  {
+    dot: { x: 50, y: 65 },
+    badge: { x: 30, y: 82 },
+    lineEnd: { x: 46, y: 85 },
+    label: "Composition",
+    value: "Règle des tiers",
+    detail: "Cadrage excellent",
+    color: "#10B981",
+    bg: "from-emerald-500/90 to-teal-600/90",
+    points: 23,
+    delay: 4.6,
   },
 ];
 
+const TOTAL_SCORE = ANNOTATIONS.reduce((s, a) => s + a.points, 0); // 96
+
 function Concept1() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1);
+  const [displayScore, setDisplayScore] = useState(0);
+  const [running, setRunning] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
+  const inView = useInView(ref, { once: false, margin: "-80px" });
+
+  const cumulativeScore = (upTo: number) =>
+    ANNOTATIONS.slice(0, upTo + 1).reduce((s, a) => s + a.points, 0);
+
+  const runSequence = () => {
+    if (running) return;
+    setRunning(true);
+    setStep(-1);
+    setDisplayScore(0);
+
+    ANNOTATIONS.forEach((a, i) => {
+      setTimeout(() => {
+        setStep(i);
+        const target = cumulativeScore(i);
+        animate(i === 0 ? 0 : cumulativeScore(i - 1), target, {
+          duration: 0.7,
+          ease: "easeOut",
+          onUpdate: (v) => setDisplayScore(Math.round(v)),
+        });
+      }, a.delay * 1000);
+    });
+
+    // Final score reveal
+    setTimeout(() => {
+      setRunning(false);
+    }, (ANNOTATIONS[ANNOTATIONS.length - 1].delay + 1.5) * 1000);
+  };
+
+  const handleReplay = () => {
+    setStep(-1);
+    setDisplayScore(0);
+    setRunning(false);
+    setTimeout(runSequence, 100);
+  };
 
   useEffect(() => {
-    if (!inView) return;
-    const timers = ANNOTATIONS.map((a, i) =>
-      setTimeout(() => setStep(i + 1), a.delay * 1000 + 600)
-    );
-    return () => timers.forEach(clearTimeout);
+    if (inView && !running && step === -1) {
+      setTimeout(runSequence, 400);
+    }
   }, [inView]);
+
+  const pct = Math.round((displayScore / TOTAL_SCORE) * 100);
 
   return (
     <div
       ref={ref}
-      className="relative w-full overflow-hidden rounded-3xl"
-      style={{ height: "90vh", minHeight: 600 }}
+      className="relative w-full rounded-3xl overflow-hidden select-none"
+      style={{ height: "88vh", minHeight: 580 }}
     >
       {/* Background photo */}
       <img
         src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80"
-        alt="Wedding portrait"
+        alt="Wedding couple"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/40" />
 
-      {/* SVG annotation lines */}
+      {/* ── SVG layer for lines + arrowheads ── */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
+        <defs>
+          <marker id="arrow-white" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M 0 0 L 6 3 L 0 6 z" fill="white" fillOpacity="0.85" />
+          </marker>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="0.3" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
         {ANNOTATIONS.map((a, i) => {
-          // Mid-point for a slight curve
-          const mx = (a.dot.x + a.badge.x) / 2;
-          const my = (a.dot.y + a.badge.y) / 2 - 4;
+          const visible = step >= i;
+          // quadratic bezier midpoint
+          const mx = (a.lineEnd.x + a.dot.x) / 2;
+          const my = (a.lineEnd.y + a.dot.y) / 2 - 5;
           return (
             <motion.path
               key={i}
-              d={`M ${a.badge.x + 6} ${a.badge.y + 3} Q ${mx} ${my} ${a.dot.x} ${a.dot.y}`}
+              d={`M ${a.lineEnd.x} ${a.lineEnd.y} Q ${mx} ${my} ${a.dot.x} ${a.dot.y}`}
               fill="none"
               stroke="white"
-              strokeWidth="0.3"
-              strokeDasharray="1"
+              strokeWidth="0.45"
+              strokeOpacity="0.85"
+              markerEnd="url(#arrow-white)"
+              filter="url(#glow)"
               initial={{ pathLength: 0, opacity: 0 }}
-              animate={
-                inView ? { pathLength: 1, opacity: 0.6 } : {}
-              }
-              transition={{ duration: 0.6, delay: a.delay }}
+              animate={visible ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+              transition={{ duration: 0.55, ease: "easeInOut" }}
             />
           );
         })}
       </svg>
 
-      {/* Annotation dots */}
+      {/* ── Annotation dots on photo ── */}
       {ANNOTATIONS.map((a, i) => (
         <motion.div
-          key={i}
-          className="absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `${a.dot.x}%`, top: `${a.dot.y}%` }}
+          key={`dot-${i}`}
+          className="absolute pointer-events-none"
+          style={{
+            left: `${a.dot.x}%`,
+            top: `${a.dot.y}%`,
+            transform: "translate(-50%, -50%)",
+          }}
           initial={{ scale: 0, opacity: 0 }}
-          animate={inView ? { scale: 1, opacity: 1 } : {}}
-          transition={{ delay: a.delay - 0.1, type: "spring", stiffness: 300 }}
+          animate={step >= i ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+          transition={{ delay: 0.1, type: "spring", stiffness: 400, damping: 20 }}
         >
-          <div className="w-3 h-3 rounded-full bg-white shadow-lg ring-2 ring-white/40" />
+          {/* Outer pulse */}
           <motion.div
-            className="absolute inset-0 rounded-full bg-white/30"
-            animate={{ scale: [1, 2.5], opacity: [0.6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, delay: a.delay }}
+            className="absolute inset-0 rounded-full"
+            style={{
+              width: 24, height: 24,
+              marginLeft: -12, marginTop: -12,
+              background: a.color,
+              opacity: 0.3,
+            }}
+            animate={{ scale: [1, 2.2, 1], opacity: [0.4, 0, 0.4] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          {/* Inner dot */}
+          <div
+            className="w-4 h-4 rounded-full border-2 border-white shadow-lg"
+            style={{ background: a.color, marginLeft: -8, marginTop: -8 }}
           />
         </motion.div>
       ))}
 
-      {/* Glassmorphism badges */}
-      {ANNOTATIONS.map((a, i) => {
-        const Icon = a.icon;
-        return (
-          <motion.div
-            key={i}
-            className="absolute"
-            style={{ left: `${a.badge.x}%`, top: `${a.badge.y}%` }}
-            initial={{ opacity: 0, y: 8, scale: 0.85 }}
-            animate={step > i ? { opacity: 1, y: 0, scale: 1 } : {}}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          >
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-2.5 shadow-2xl min-w-[130px]">
-              <div className="flex items-center gap-2 mb-1">
-                <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${a.color} flex items-center justify-center flex-shrink-0`}>
-                  <Icon className="w-2.5 h-2.5 text-white" />
-                </div>
-                <span className="text-white/70 text-[10px] font-medium uppercase tracking-wider">{a.label}</span>
-              </div>
-              <div className="text-white font-bold text-lg leading-none pl-7">{a.value}</div>
-            </div>
-          </motion.div>
-        );
-      })}
-
-      {/* Central title */}
-      <div className="absolute inset-x-0 bottom-0 p-10 text-center">
+      {/* ── Glassmorphism annotation badges ── */}
+      {ANNOTATIONS.map((a, i) => (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2, duration: 0.7 }}
+          key={`badge-${i}`}
+          className="absolute"
+          style={{ left: `${a.badge.x}%`, top: `${a.badge.y}%` }}
+          initial={{ opacity: 0, x: i < 2 ? -20 : 20, scale: 0.85 }}
+          animate={
+            step >= i
+              ? { opacity: 1, x: 0, scale: 1 }
+              : { opacity: 0, x: i < 2 ? -20 : 20, scale: 0.85 }
+          }
+          transition={{ type: "spring", stiffness: 260, damping: 22 }}
         >
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 text-white/80 text-xs mb-4">
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
-            Analyse IA en temps réel — Gemini 2.0
+          <div
+            className="rounded-2xl px-3.5 py-2.5 shadow-2xl border border-white/20 backdrop-blur-md min-w-[140px]"
+            style={{ background: `linear-gradient(135deg, ${a.color}cc, ${a.color}99)` }}
+          >
+            <div className="text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5">
+              {a.label}
+            </div>
+            <div className="text-white font-bold text-base leading-tight">{a.value}</div>
+            <div className="text-white/60 text-[10px] mt-0.5">{a.detail}</div>
           </div>
-          <h2 className="text-4xl md:text-6xl font-serif font-bold text-white leading-tight mb-3">
-            La plateforme qui<br />
+        </motion.div>
+      ))}
+
+      {/* ── Central score badge ── */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2">
+        <motion.div
+          className="bg-black/50 backdrop-blur-xl border border-white/15 rounded-2xl px-5 py-3 text-center shadow-2xl"
+          initial={{ opacity: 0, y: -10 }}
+          animate={step >= 0 ? { opacity: 1, y: 0 } : { opacity: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="text-white/50 text-[10px] uppercase tracking-widest mb-1 flex items-center gap-1.5 justify-center">
+            <Zap className="w-3 h-3 text-amber-400" />
+            Score Picktur — Analyse IA
+          </div>
+          <div className="flex items-end gap-1 justify-center">
+            <span className="text-white font-black text-4xl tabular-nums leading-none">{displayScore}</span>
+            <span className="text-white/40 text-xl font-bold mb-0.5">/ {TOTAL_SCORE}</span>
+          </div>
+          {/* Progress bar */}
+          <div className="mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden w-40 mx-auto">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-violet-400 via-pink-400 to-amber-400"
+              animate={{ width: `${pct}%` }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* ── Replay button ── */}
+      {!running && step >= 0 && (
+        <motion.button
+          onClick={handleReplay}
+          className="absolute top-4 right-4 flex items-center gap-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white/70 hover:text-white px-3 py-1.5 rounded-full text-xs transition-all"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <RefreshCw className="w-3 h-3" />
+          Rejouer
+        </motion.button>
+      )}
+
+      {/* ── Bottom title ── */}
+      <div className="absolute inset-x-0 bottom-0 p-8 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white leading-tight">
+            La plateforme qui{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-pink-300 to-violet-300">
               révèle chaque mariage.
             </span>
           </h2>
-          <p className="text-white/60 text-lg max-w-xl mx-auto">
-            Chaque photo analysée. Chaque moment préservé.
+          <p className="text-white/50 text-base mt-2">
+            26 critères analysés · Résultat en quelques secondes
           </p>
         </motion.div>
       </div>
@@ -168,7 +309,6 @@ function Concept1() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONCEPT 2 — Masonry Chaos to Order
-// AI scanner descends → bad photos fade out → grid reorders into perfection
 // ─────────────────────────────────────────────────────────────────────────────
 
 const MASONRY_PHOTOS = [
@@ -212,7 +352,6 @@ function Concept2() {
 
   return (
     <div ref={ref} className="relative rounded-3xl overflow-hidden bg-stone-950 p-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
           <div className="flex items-center gap-2 text-white/50 text-xs mb-1">
@@ -225,10 +364,7 @@ function Concept2() {
               animate={{ opacity: 1 }}
               className="text-amber-400 text-sm font-medium flex items-center gap-2"
             >
-              <motion.span
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >⚡</motion.span>
+              <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity }}>⚡</motion.span>
               Analyse IA en cours…
             </motion.p>
           )}
@@ -254,9 +390,7 @@ function Concept2() {
         )}
       </div>
 
-      {/* Grid */}
       <div className="relative">
-        {/* Scanner line */}
         {phase === "scanning" && (
           <motion.div
             className="absolute left-0 right-0 z-20 pointer-events-none"
@@ -268,11 +402,7 @@ function Concept2() {
           </motion.div>
         )}
 
-        <motion.div
-          layout
-          className="grid grid-cols-4 gap-2"
-          style={{ gridAutoRows: "80px" }}
-        >
+        <motion.div layout className="grid grid-cols-4 gap-2" style={{ gridAutoRows: "80px" }}>
           <AnimatePresence mode="popLayout">
             {visiblePhotos.map((photo) => (
               <motion.div
@@ -293,15 +423,11 @@ function Concept2() {
                   alt=""
                   className="w-full h-full object-cover"
                 />
-                {/* Bad photo overlay */}
                 {phase !== "done" && !photo.good && (
                   <div className="absolute inset-0 bg-red-900/20 flex items-end p-1.5">
-                    <span className="text-[9px] bg-red-500/80 text-white px-1.5 py-0.5 rounded-full font-medium">
-                      ✗ Écarté
-                    </span>
+                    <span className="text-[9px] bg-red-500/80 text-white px-1.5 py-0.5 rounded-full font-medium">✗ Écarté</span>
                   </div>
                 )}
-                {/* Good photo badge after scan */}
                 {phase === "done" && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0 }}
@@ -318,7 +444,6 @@ function Concept2() {
         </motion.div>
       </div>
 
-      {/* Bottom CTA */}
       {phase === "done" && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -327,9 +452,9 @@ function Concept2() {
           className="mt-5 text-center"
         >
           <h3 className="text-white text-2xl font-serif font-bold mb-2">
-            Vos 4 847 photos triées<br />pendant que vous dormez.
+            Vos 4 847 photos triées pendant que vous dormez.
           </h3>
-          <p className="text-white/40 text-sm">Gemini analyse 26 critères par photo — netteté, expression, composition, lumière.</p>
+          <p className="text-white/40 text-sm">Gemini analyse 26 critères par photo.</p>
         </motion.div>
       )}
     </div>
@@ -339,7 +464,6 @@ function Concept2() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONCEPT 3 — Selfie Finder Simulation
-// Circular finder moves across a group photo, identifying faces
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FACES = [
@@ -356,6 +480,7 @@ function Concept3() {
   const [foundFaces, setFoundFaces] = useState<number[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true });
+  const cycleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!inView) return;
@@ -363,10 +488,10 @@ function Concept3() {
 
     const cycle = () => {
       setIdentified(false);
-      setTimeout(() => {
+      cycleRef.current = setTimeout(() => {
         setIdentified(true);
         setFoundFaces((prev) => [...new Set([...prev, current])]);
-        setTimeout(() => {
+        cycleRef.current = setTimeout(() => {
           current = (current + 1) % FACES.length;
           setActiveIndex(current);
           cycle();
@@ -375,7 +500,10 @@ function Concept3() {
     };
 
     const timer = setTimeout(cycle, 800);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (cycleRef.current) clearTimeout(cycleRef.current);
+    };
   }, [inView]);
 
   const activeFace = FACES[activeIndex];
@@ -386,15 +514,14 @@ function Concept3() {
       className="relative w-full rounded-3xl overflow-hidden"
       style={{ height: "85vh", minHeight: 560 }}
     >
-      {/* Group photo */}
       <img
         src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=1920&q=80"
-        alt="Wedding cocktail group"
+        alt="Wedding group"
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-black/40" />
 
-      {/* Already-found face markers */}
+      {/* Found face markers */}
       {FACES.map((face, i) =>
         foundFaces.includes(i) && i !== activeIndex ? (
           <motion.div
@@ -420,49 +547,46 @@ function Concept3() {
         ) : null
       )}
 
-      {/* Moving finder circle */}
+      {/* Moving finder */}
       <motion.div
         className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         animate={{ left: `${activeFace.x}%`, top: `${activeFace.y}%` }}
         transition={{ type: "spring", stiffness: 80, damping: 18 }}
         style={{ left: `${activeFace.x}%`, top: `${activeFace.y}%` }}
       >
-        {/* Outer scanning ring */}
+        {/* Scanning ring */}
         <motion.div
-          className="absolute inset-0 rounded-full border-2 border-white/60"
+          className="absolute rounded-full border-2 border-white/60"
           style={{ width: 80, height: 80, margin: -40 }}
-          animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.2, 0.6] }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.15, 0.6] }}
           transition={{ duration: 1.4, repeat: Infinity }}
         />
-        {/* Corner brackets */}
-        {[
-          "top-0 left-0 border-t-2 border-l-2 rounded-tl-sm",
-          "top-0 right-0 border-t-2 border-r-2 rounded-tr-sm",
-          "bottom-0 left-0 border-b-2 border-l-2 rounded-bl-sm",
-          "bottom-0 right-0 border-b-2 border-r-2 rounded-br-sm",
-        ].map((cls, i) => (
+        {/* Crosshair corners */}
+        {["tl", "tr", "bl", "br"].map((pos) => (
           <div
-            key={i}
-            className={`absolute w-4 h-4 border-white ${cls}`}
-            style={{ margin: -40 + (i < 2 ? 0 : 66) + (i % 2 === 0 ? 0 : 66) - (i < 2 ? 0 : 0) }}
+            key={pos}
+            className={`absolute w-4 h-4 border-white border-2 ${
+              pos === "tl" ? "border-r-0 border-b-0 rounded-tl top-0 left-0" :
+              pos === "tr" ? "border-l-0 border-b-0 rounded-tr top-0 right-0" :
+              pos === "bl" ? "border-r-0 border-t-0 rounded-bl bottom-0 left-0" :
+                             "border-l-0 border-t-0 rounded-br bottom-0 right-0"
+            }`}
+            style={{ margin: -40 + (pos.includes("b") ? 72 : 0) + (pos.includes("r") ? 72 : 0) }}
           />
         ))}
         {/* Center dot */}
-        <div
-          className="absolute w-2 h-2 rounded-full bg-white"
-          style={{ margin: -4 }}
-        />
+        <div className="absolute w-2 h-2 rounded-full bg-white" style={{ margin: -4 }} />
 
-        {/* Identified label */}
+        {/* Label */}
         <AnimatePresence>
           {identified && (
             <motion.div
               key={activeFace.name}
-              initial={{ opacity: 0, y: 8, scale: 0.9 }}
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -4 }}
-              className="absolute left-1/2 whitespace-nowrap"
-              style={{ top: 52, marginLeft: -40 }}
+              exit={{ opacity: 0, y: -6 }}
+              className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
+              style={{ top: 50 }}
             >
               <div
                 className="rounded-xl px-3 py-2 shadow-xl backdrop-blur-md border border-white/20"
@@ -477,31 +601,17 @@ function Concept3() {
                   {activeFace.count} photos trouvées
                 </div>
               </div>
-              {/* Connector dot */}
-              <div
-                className="w-1.5 h-1.5 rounded-full mx-auto -mt-0.5"
-                style={{ background: activeFace.color }}
-              />
             </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
 
-      {/* Bottom overlay */}
+      {/* Bottom */}
       <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
-        >
-          {/* Live counter */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.3 }}>
           <div className="flex items-center gap-3 mb-4 flex-wrap">
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5">
-              <motion.div
-                className="w-2 h-2 rounded-full bg-emerald-400"
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-              />
+              <motion.div className="w-2 h-2 rounded-full bg-emerald-400" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }} />
               <span className="text-white text-xs font-medium">{foundFaces.length} / {FACES.length} personnes identifiées</span>
             </div>
             <div className="flex -space-x-2">
@@ -517,16 +627,13 @@ function Concept3() {
               ))}
             </div>
           </div>
-
           <h3 className="text-white text-3xl md:text-5xl font-serif font-bold mb-2">
-            Chaque invité retrouve<br />
+            Chaque invité retrouve{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-violet-300">
               ses photos. En un selfie.
             </span>
           </h3>
-          <p className="text-white/50 text-base">
-            Picktur identifie tous les visages. Vos clients n'ont plus qu'à sourire.
-          </p>
+          <p className="text-white/50 text-base">Picktur identifie tous les visages. Vos clients n'ont plus qu'à sourire.</p>
         </motion.div>
       </div>
     </div>
@@ -535,7 +642,7 @@ function Concept3() {
 
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HERO SANDBOX — renders all 3 concepts for comparison
+// HERO SANDBOX
 // ─────────────────────────────────────────────────────────────────────────────
 
 function ConceptLabel({ number, title, description }: { number: string; title: string; description: string }) {
@@ -555,7 +662,6 @@ function ConceptLabel({ number, title, description }: { number: string; title: s
 export default function HeroSandbox() {
   return (
     <div className="min-h-screen bg-[#F5F4F2]">
-      {/* Header */}
       <div className="bg-stone-900 text-white px-8 py-5 sticky top-0 z-50 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center">
@@ -570,38 +676,29 @@ export default function HeroSandbox() {
 
       <div className="max-w-5xl mx-auto px-6 pb-24">
 
-        {/* Concept 1 */}
         <ConceptLabel
           number="01"
           title="Vision Augmentée"
-          description="Photo plein-écran avec lignes d'annotation animées et badges glassmorphism. Montre l'IA qui analyse la photo en direct."
+          description="Photo plein-écran. L'IA scanne la photo en direct : lignes fléchées animées vers chaque point d'analyse, badge qui apparaît, score qui monte critère par critère jusqu'à 96/100."
         />
         <Concept1 />
 
-        {/* Concept 2 */}
         <ConceptLabel
           number="02"
           title="Masonry Chaos → Order"
-          description="Grille de photos, scanner IA qui descend. Les mauvaises photos s'estompent, les bonnes se réorganisent parfaitement."
+          description="Grille de 12 photos mélangées. Un scanner IA violet descend. Les mauvaises photos s'estompent, les bonnes restent avec un checkmark vert — la grille se réorganise parfaitement."
         />
         <Concept2 />
 
-        {/* Concept 3 */}
         <ConceptLabel
           number="03"
           title="Selfie Finder Simulation"
-          description="Photo de groupe cocktail. Un finder circulaire se déplace et identifie chaque visage avec une animation pulsée."
+          description="Photo de groupe cocktail. Un finder circulaire se déplace de visage en visage, identifie chaque personne avec son rôle et le nombre de photos trouvées."
         />
         <Concept3 />
 
-        {/* Footer note */}
         <div className="mt-16 p-6 bg-white rounded-2xl border border-stone-200 text-center">
-          <p className="text-stone-400 text-sm">
-            Sandbox de comparaison — Picktur Hero Banner · 3 concepts
-          </p>
-          <p className="text-stone-300 text-xs mt-1">
-            Chaque concept peut être raffiné ou combiné avant intégration dans la landing page finale.
-          </p>
+          <p className="text-stone-400 text-sm">Sandbox — Picktur Hero Banner · 3 concepts à comparer</p>
         </div>
       </div>
     </div>
