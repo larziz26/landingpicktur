@@ -523,9 +523,9 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
               >
-                {/* Sophie + Thomas on the left */}
+                {/* Marie + Sophie on the left */}
                 <div className="flex gap-1">
-                  {[0, 1].map(i => {
+                  {[2, 0].map(i => {
                     const f = FACE_DETECTIONS[i];
                     return visibleFaces.includes(i) ? (
                       <motion.div
@@ -552,9 +552,9 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                   <span className="text-emerald-300 text-[8px] font-semibold">{visibleFaces.length}/{FACE_DETECTIONS.length}</span>
                 </div>
 
-                {/* Marie + Luc on the right */}
+                {/* Thomas + Luc on the right */}
                 <div className="flex gap-1">
-                  {[2, 3].map(i => {
+                  {[1, 3].map(i => {
                     const f = FACE_DETECTIONS[i];
                     return visibleFaces.includes(i) ? (
                       <motion.div
