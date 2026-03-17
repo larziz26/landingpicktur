@@ -167,7 +167,8 @@ const T = {
     titleQualityAccent: "révèle chaque mariage.",
     titleQualitySub: "26 critères analysés · Score en quelques secondes",
     titleFaces: "Chaque invité retrouve",
-    titleFacesAccent: "ses photos. En un selfie.",
+    titleFacesAccentA: "ses photos.",
+    titleFacesAccentB: "En un selfie.",
     titleFacesSub: "Picktur identifie automatiquement chaque personne · Galerie personnelle instantanée",
   },
   en: {
@@ -189,7 +190,8 @@ const T = {
     titleQualityAccent: "reveals every wedding.",
     titleQualitySub: "26 criteria analyzed · Score in seconds",
     titleFaces: "Every guest finds",
-    titleFacesAccent: "their photos. In one selfie.",
+    titleFacesAccentA: "their photos.",
+    titleFacesAccentB: "In one selfie.",
     titleFacesSub: "Picktur automatically identifies each person · Instant personal gallery",
   },
 };
@@ -386,11 +388,10 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
               className="rounded-xl md:rounded-2xl px-2 py-1 md:px-5 md:py-3 shadow-2xl border border-white/20 backdrop-blur-md min-w-[72px] md:min-w-[158px]"
               style={{ background: `linear-gradient(135deg, ${a.color}cc, ${a.color}88)` }}
             >
-              <div className="text-[7px] md:text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5 hidden md:block">{tr.annotations[i].label}</div>
               {tr.annotations[i].value !== "✓" && (
                 <div className="text-white font-bold text-[10px] md:text-lg leading-tight">{tr.annotations[i].value}</div>
               )}
-              <div className="text-white/80 text-[8px] md:text-[10px] font-semibold md:font-normal md:text-white/60 mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
+              <div className="text-white/80 text-[8px] md:text-sm font-bold md:text-white mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
             </div>
           </motion.div>
         ))}
@@ -432,7 +433,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
       <AnimatePresence>
         {phase === "transition" && (
           <motion.div
-            className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center z-20"
+            className="absolute inset-x-0 top-[30%] -translate-y-1/2 flex justify-center z-20"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
@@ -692,9 +693,9 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
               exit={{ opacity: 0, y: -8 }}
             >
               <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
-                {tr.titleFaces}{" "}
+                {tr.titleFaces}<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-violet-300">
-                  {tr.titleFacesAccent}
+                  {tr.titleFacesAccentA}<br />{tr.titleFacesAccentB}
                 </span>
               </h2>
               <p className="text-white/50 text-[10px] sm:text-sm md:text-base mt-1 md:mt-2">
