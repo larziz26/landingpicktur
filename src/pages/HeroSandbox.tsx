@@ -508,123 +508,145 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
         )}
       </AnimatePresence>
 
-      {/* ── PHASE 2 — face labels (above or below box; mobile: spread across top) ── */}
-      <AnimatePresence>
-        {showFaces && FACE_DETECTIONS.map((f, i) => {
-          const MOBILE_LABEL_POS = [
-            { left: "3%",  top: "1%" },
-            { left: "20%", top: "1%" },
-            { left: "67%", top: "1%" },
-            { left: "84%", top: "1%" },
-          ];
-          return visibleFaces.includes(i) ? (
-            <motion.div
-              key={`face-label-${f.name}`}
-              className="absolute"
-              style={isMobile ? {
-                left: MOBILE_LABEL_POS[i].left,
-                top: MOBILE_LABEL_POS[i].top,
-                transform: "none",
-              } : {
-                left: `${f.box.x + f.box.w / 2}%`,
-                top: f.labelBelow
-                  ? `${f.box.y + f.box.h + 1}%`
-                  : `${f.box.y - 1}%`,
-                transform: f.labelBelow
-                  ? "translate(-50%, 0%)"
-                  : "translate(-50%, -100%)",
-              }}
-              initial={{ opacity: 0, y: f.labelBelow ? -8 : 8, scale: 0.85 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 22, delay: 0.3 }}
-            >
-              {f.labelBelow && !isMobile && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
-              <div
-                className="rounded-xl px-2 py-1 md:px-3 md:py-2 shadow-xl border border-white/20 backdrop-blur-md text-center min-w-[60px] md:min-w-[90px]"
-                style={{ background: `${f.color}cc` }}
-              >
-                <div className="text-white font-bold text-[10px] md:text-xs">{f.name}</div>
-                <div className="text-white/70 text-[8px] md:text-[10px]">{tr.roles[i]}</div>
-              </div>
-              {!f.labelBelow && !isMobile && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
-            </motion.div>
-          ) : null;
-        })}
-      </AnimatePresence>
-
       {/* ── PHASE 2 — gallery cards in safe zone [50,800,400,1130] on 1920×1080 ── */}
       {/* That's the column between Sophie's right shoulder and Thomas's left arm */}
       <AnimatePresence>
         {showFaces && (
-          <motion.div
-            className="absolute flex flex-col gap-1 md:gap-1.5 z-10"
-            style={isMobile
-              ? { left: "34%", top: "4.6%", width: "32%" }
-              : { left: "41.7%", top: "4.6%", width: "17.2%" }
-            }
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Counter badge */}
-            <div className="bg-black/55 backdrop-blur-xl border border-emerald-400/30 rounded-lg px-1.5 py-1 md:px-2.5 md:py-1.5 flex items-center gap-1 md:gap-1.5">
+          <>
+            {/* ── Mobile: horizontal row across the top ── */}
+            {isMobile && (
               <motion.div
-                className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
-                animate={{ opacity: [1, 0.2, 1] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-              />
-              <span className="text-emerald-300 text-[9px] font-semibold">
-                {visibleFaces.length} / {FACE_DETECTIONS.length} {tr.identified}
-              </span>
-            </div>
+                className="absolute z-10 flex items-start justify-between px-1"
+                style={{ left: "0%", top: "1%", width: "100%" }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                {/* Sophie + Thomas on the left */}
+                <div className="flex gap-1">
+                  {[0, 1].map(i => {
+                    const f = FACE_DETECTIONS[i];
+                    return visibleFaces.includes(i) ? (
+                      <motion.div
+                        key={`gallery-${f.name}`}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
+                        className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg px-1.5 py-1 flex items-center gap-1 cursor-pointer hover:bg-black/70 transition-all"
+                        style={{ borderColor: `${f.color}55` }}
+                        onClick={() => setActiveGallery(activeGallery === i ? null : i)}
+                      >
+                        <div className="w-5 h-5 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
+                          <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="text-white font-semibold text-[8px] leading-tight">{f.name}</div>
+                      </motion.div>
+                    ) : <div key={`empty-${i}`} />;
+                  })}
+                </div>
 
-            <div className="grid grid-cols-2 gap-1 md:flex md:flex-col md:gap-1.5">
-              {FACE_DETECTIONS.map((f, i) =>
-                visibleFaces.includes(i) ? (
-                  <motion.div
-                    key={`gallery-${f.name}`}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
-                    className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg md:rounded-xl px-1.5 py-1 md:px-2 md:py-1.5 flex items-center gap-1 md:gap-2 cursor-pointer hover:bg-black/70 transition-all"
-                    onClick={() => setActiveGallery(activeGallery === i ? null : i)}
-                  >
-                    {/* Face photo avatar */}
-                    <div
-                      className="w-5 h-5 md:w-7 md:h-7 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]"
-                      style={{ borderColor: f.color }}
-                    >
-                      <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-white font-semibold text-[8px] md:text-[10px] leading-tight truncate">{f.name}</div>
-                      <div className="text-white/50 text-[7px] md:text-[8px] truncate hidden md:block">{tr.roles[i]} · {f.photos} photos</div>
-                    </div>
-                  </motion.div>
-                ) : <div key={`gallery-empty-${i}`} />
-              )}
-            </div>
+                {/* Counter in the middle */}
+                <div className="bg-black/55 backdrop-blur-xl border border-emerald-400/30 rounded-lg px-1.5 py-1 flex items-center gap-1">
+                  <motion.div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1.2, repeat: Infinity }} />
+                  <span className="text-emerald-300 text-[8px] font-semibold">{visibleFaces.length}/{FACE_DETECTIONS.length}</span>
+                </div>
 
-            {/* Selfie prompt */}
-            {visibleFaces.length === FACE_DETECTIONS.length && (
+                {/* Marie + Luc on the right */}
+                <div className="flex gap-1">
+                  {[2, 3].map(i => {
+                    const f = FACE_DETECTIONS[i];
+                    return visibleFaces.includes(i) ? (
+                      <motion.div
+                        key={`gallery-${f.name}`}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
+                        className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg px-1.5 py-1 flex items-center gap-1 cursor-pointer hover:bg-black/70 transition-all"
+                        style={{ borderColor: `${f.color}55` }}
+                        onClick={() => setActiveGallery(activeGallery === i ? null : i)}
+                      >
+                        <div className="w-5 h-5 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
+                          <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="text-white font-semibold text-[8px] leading-tight">{f.name}</div>
+                      </motion.div>
+                    ) : <div key={`empty-${i}`} />;
+                  })}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Selfie prompt — mobile, below the face row */}
+            {isMobile && visibleFaces.length === FACE_DETECTIONS.length && (
               <motion.div
+                className="absolute z-10"
+                style={{ left: "50%", top: "11%", transform: "translateX(-50%)" }}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-lg md:rounded-xl px-1 py-0.5 md:px-2 md:py-1.5"
               >
-                <div className="flex items-center gap-1 md:gap-1.5">
-                  <ScanFace className="w-2 h-2 md:w-3.5 md:h-3.5 text-white flex-shrink-0" />
-                  <div>
-                    <div className="text-white font-bold text-[7px] md:text-[9px]">{tr.selfieAccess}</div>
-                    <div className="text-white/60 text-[7px] md:text-[8px] hidden md:block">{tr.selfieGallery}</div>
+                <div className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-lg px-2 py-1">
+                  <div className="flex items-center gap-1">
+                    <ScanFace className="w-2.5 h-2.5 text-white flex-shrink-0" />
+                    <div className="text-white font-bold text-[8px]">{tr.selfieAccess}</div>
                   </div>
                 </div>
               </motion.div>
             )}
-          </motion.div>
+
+            {/* ── Desktop: vertical panel in center column ── */}
+            {!isMobile && (
+              <motion.div
+                className="absolute flex flex-col gap-1.5 z-10"
+                style={{ left: "41.7%", top: "4.6%", width: "17.2%" }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="bg-black/55 backdrop-blur-xl border border-emerald-400/30 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5">
+                  <motion.div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1.2, repeat: Infinity }} />
+                  <span className="text-emerald-300 text-[9px] font-semibold">{visibleFaces.length} / {FACE_DETECTIONS.length} {tr.identified}</span>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  {FACE_DETECTIONS.map((f, i) =>
+                    visibleFaces.includes(i) ? (
+                      <motion.div
+                        key={`gallery-${f.name}`}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
+                        className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-xl px-2 py-1.5 flex items-center gap-2 cursor-pointer hover:bg-black/70 transition-all"
+                        onClick={() => setActiveGallery(activeGallery === i ? null : i)}
+                      >
+                        <div className="w-7 h-7 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
+                          <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-white font-semibold text-[10px] leading-tight truncate">{f.name}</div>
+                          <div className="text-white/50 text-[8px] truncate">{tr.roles[i]} · {f.photos} photos</div>
+                        </div>
+                      </motion.div>
+                    ) : <div key={`gallery-empty-${i}`} />
+                  )}
+                </div>
+                {visibleFaces.length === FACE_DETECTIONS.length && (
+                  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                    className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-xl px-2 py-1.5"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <ScanFace className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                      <div>
+                        <div className="text-white font-bold text-[9px]">{tr.selfieAccess}</div>
+                        <div className="text-white/60 text-[8px]">{tr.selfieGallery}</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </motion.div>
+            )}
+          </>
         )}
       </AnimatePresence>
 
