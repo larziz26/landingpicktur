@@ -375,7 +375,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             className="absolute"
             style={{
               left: `${a.badge.x}%`,
-              top: `${isMobile && i === 4 ? 43 : a.badge.y}%`,
+              top: `${isMobile && i === 4 ? 43 : isMobile && i === 3 ? 20 : a.badge.y}%`,
             }}
             initial={{ opacity: 0, x: i < 2 ? -18 : 18, scale: 0.85 }}
             animate={visibleAnnotations.includes(i) ? { opacity: 1, x: 0, scale: 1 } : {}}
@@ -387,8 +387,10 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
               style={{ background: `linear-gradient(135deg, ${a.color}cc, ${a.color}88)` }}
             >
               <div className="text-[7px] md:text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5 hidden md:block">{tr.annotations[i].label}</div>
-              <div className="text-white font-bold text-[10px] md:text-base leading-tight">{tr.annotations[i].value}</div>
-              <div className="text-white/80 text-[8px] md:text-[9px] font-semibold md:font-normal md:text-white/60 mt-0 md:mt-0.5 truncate max-w-[68px] md:max-w-none">{tr.annotations[i].label}</div>
+              {(!isMobile || tr.annotations[i].value !== "✓") && (
+                <div className="text-white font-bold text-[10px] md:text-base leading-tight">{tr.annotations[i].value}</div>
+              )}
+              <div className="text-white/80 text-[8px] md:text-[9px] font-semibold md:font-normal md:text-white/60 mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
             </div>
           </motion.div>
         ))}
@@ -506,14 +508,24 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
         )}
       </AnimatePresence>
 
-      {/* ── PHASE 2 — face labels (above or below box depending on position) ── */}
+      {/* ── PHASE 2 — face labels (above or below box; mobile: spread across top) ── */}
       <AnimatePresence>
-        {showFaces && FACE_DETECTIONS.map((f, i) =>
-          visibleFaces.includes(i) ? (
+        {showFaces && FACE_DETECTIONS.map((f, i) => {
+          const MOBILE_LABEL_POS = [
+            { left: "3%",  top: "1%" },
+            { left: "20%", top: "1%" },
+            { left: "67%", top: "1%" },
+            { left: "84%", top: "1%" },
+          ];
+          return visibleFaces.includes(i) ? (
             <motion.div
               key={`face-label-${f.name}`}
               className="absolute"
-              style={{
+              style={isMobile ? {
+                left: MOBILE_LABEL_POS[i].left,
+                top: MOBILE_LABEL_POS[i].top,
+                transform: "none",
+              } : {
                 left: `${f.box.x + f.box.w / 2}%`,
                 top: f.labelBelow
                   ? `${f.box.y + f.box.h + 1}%`
