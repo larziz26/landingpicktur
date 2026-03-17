@@ -392,16 +392,17 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10, transition: { duration: 0.5 } }}
           >
-            <div className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-2xl px-3 py-2 md:px-5 md:py-3 text-center shadow-2xl">
-              <div className="text-white/50 text-[9px] uppercase tracking-widest mb-0.5 md:mb-1 flex items-center gap-1 md:gap-1.5 justify-center">
-                <Zap className="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-400" />
-                {tr.scoreBadge}
+            <div className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-xl md:rounded-2xl px-2 py-1 md:px-5 md:py-3 text-center shadow-2xl">
+              <div className="text-white/50 text-[8px] md:text-[10px] uppercase tracking-widest mb-0.5 md:mb-1 flex items-center gap-1 md:gap-1.5 justify-center">
+                <Zap className="w-2 h-2 md:w-3 md:h-3 text-amber-400" />
+                <span className="hidden md:inline">{tr.scoreBadge}</span>
+                <span className="md:hidden">Score</span>
               </div>
-              <div className="flex items-end gap-1 justify-center">
-                <span className="text-white font-black text-2xl md:text-4xl tabular-nums leading-none">{displayScore}</span>
-                <span className="text-white/40 text-sm md:text-xl font-bold mb-0.5">/ {TOTAL_SCORE}</span>
+              <div className="flex items-end gap-0.5 md:gap-1 justify-center">
+                <span className="text-white font-black text-base md:text-4xl tabular-nums leading-none">{displayScore}</span>
+                <span className="text-white/40 text-[10px] md:text-xl font-bold mb-0.5">/{TOTAL_SCORE}</span>
               </div>
-              <div className="mt-1.5 md:mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden w-20 md:w-36 mx-auto">
+              <div className="mt-1 md:mt-2 h-1 md:h-1.5 bg-white/10 rounded-full overflow-hidden w-12 md:w-36 mx-auto">
                 <motion.div
                   className="h-full rounded-full bg-gradient-to-r from-violet-400 via-pink-400 to-amber-400"
                   animate={{ width: `${pct}%` }}
@@ -583,12 +584,12 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-lg md:rounded-xl px-1.5 py-1 md:px-2 md:py-1.5"
+                className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-lg md:rounded-xl px-1 py-0.5 md:px-2 md:py-1.5"
               >
-                <div className="flex items-center gap-1.5">
-                  <ScanFace className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-white flex-shrink-0" />
+                <div className="flex items-center gap-1 md:gap-1.5">
+                  <ScanFace className="w-2 h-2 md:w-3.5 md:h-3.5 text-white flex-shrink-0" />
                   <div>
-                    <div className="text-white font-bold text-[8px] md:text-[9px]">{tr.selfieAccess}</div>
+                    <div className="text-white font-bold text-[7px] md:text-[9px]">{tr.selfieAccess}</div>
                     <div className="text-white/60 text-[7px] md:text-[8px] hidden md:block">{tr.selfieGallery}</div>
                   </div>
                 </div>
