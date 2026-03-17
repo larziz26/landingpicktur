@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView, useAnimation, animate } from "framer-motion";
-import { Eye, Layers, User, Check, Zap, Camera, ScanFace, RefreshCw, Images } from "lucide-react";
+import { Eye, Layers, User, Check, Zap, Camera, ScanFace, Images } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONCEPT 1+3 FUSION — Vision Augmentée × Selfie Finder
@@ -12,123 +12,141 @@ import { Eye, Layers, User, Check, Zap, Camera, ScanFace, RefreshCw, Images } fr
 // PHASE 2 (6→12s): Face recognition — detection boxes + guest galleries
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Photo used: couple centered, bride left, groom right
-// https://images.unsplash.com/photo-1583939003579-730e3918a45a — bride closeup
-// Better: photo-1519741497674-611481863552 — couple embracing (canonical Unsplash wedding)
-const HERO_PHOTO = "https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1920&q=80";
+// Image: 2752×1536px landscape (Gemini château wedding, watermark removed)
+// Coordinates from Gemini bbox [y1, x1, y2, x2] normalized 0-1000:
+//   Sophie: [224,169,1000,370] → x:16.9-37%, y_top:22.4% | eyes x=29.1%,y=35.1%
+//   Thomas: [136,638,1000,856] → x:63.8-85.6%, y_top:13.6%
+//   Marie:  [333,40,1000,182]  → x:4-18.2%, y_top:33.3%
+//   Luc:    [319,834,1000,999] → x:83.4-99.9%, y_top:31.9%
+//   Bouquet:[804,388,994,532]  → x:38.8-53.2%, y:80.4-99.4%
+const HERO_PHOTO = "/hero-wedding.png";
 
 // Phase 1 — quality annotations
-// Coordinates calibrated for photo-1606800052052 (bride+groom formal portrait)
+// Badges layout: i=0,1 slide from LEFT (x=2%), i=2,3,4 slide from RIGHT (x=42%, center gap)
+// Center badges at x=42% sit between Sophie (ends ~37%) and Thomas (starts ~67%) — château bg
 const QUALITY_ANNOTATIONS = [
   {
-    dot: { x: 35, y: 24 },         // bride's eyes
-    badge: { x: 2, y: 6 },
-    lineEnd: { x: 20, y: 11 },
+    dot: { x: 30, y: 34 },         // Sophie's face center (575/1920=30%, 365/1080=34%)
+    badge: { x: 2, y: 8 },
+    lineEnd: { x: 20, y: 24 },
     label: "Yeux ouverts",
     value: "✓",
     detail: "Les deux sujets",
     color: "#6366F1",
     bg: "from-indigo-600/90 to-violet-700/90",
     points: 15,
-    delay: 0.7,
+    delay: 0.84,
   },
   {
-    dot: { x: 50, y: 50 },         // body sharpness
-    badge: { x: 2, y: 40 },
-    lineEnd: { x: 20, y: 45 },
+    dot: { x: 35, y: 68 },         // bouquet / focus plane (Sophie holding bouquet)
+    badge: { x: 2, y: 52 },
+    lineEnd: { x: 20, y: 58 },
     label: "Netteté",
     value: "97%",
     detail: "Mise au point parfaite",
     color: "#8B5CF6",
     bg: "from-violet-600/90 to-purple-700/90",
     points: 18,
-    delay: 1.7,
+    delay: 2.04,
   },
   {
-    dot: { x: 28, y: 30 },         // bride face
-    badge: { x: 66, y: 6 },
-    lineEnd: { x: 70, y: 11 },
+    dot: { x: 30, y: 25 },         // Sophie face top (center-x of her box)
+    badge: { x: 42, y: 3 },
+    lineEnd: { x: 42, y: 13 },
     label: "Mariée détectée",
     value: "✓",
     detail: "Visage identifié",
     color: "#E879A0",
     bg: "from-pink-500/90 to-rose-600/90",
     points: 20,
-    delay: 2.7,
+    delay: 3.24,
   },
   {
-    dot: { x: 64, y: 26 },         // groom face
-    badge: { x: 66, y: 40 },
-    lineEnd: { x: 70, y: 45 },
+    dot: { x: 70.6, y: 28.7 },     // Thomas face center (1355/1920=70.6%, 310/1080=28.7%)
+    badge: { x: 42, y: 37 },
+    lineEnd: { x: 54, y: 28 },
     label: "Marié détecté",
     value: "✓",
     detail: "Visage identifié",
     color: "#06B6D4",
     bg: "from-cyan-500/90 to-blue-600/90",
     points: 20,
-    delay: 3.7,
+    delay: 4.44,
   },
   {
-    dot: { x: 50, y: 68 },         // composition / overall frame
-    badge: { x: 30, y: 82 },
-    lineEnd: { x: 46, y: 86 },
-    label: "Composition",
-    value: "Règle des tiers",
-    detail: "Cadrage excellent",
+    dot: { x: 46, y: 87 },         // bouquet center (Gemini: x=46%, y=89.9%)
+    badge: { x: 42, y: 56 },
+    lineEnd: { x: 47, y: 72 },
+    label: "Bouquet de fleurs",
+    value: "Détecté",
+    detail: "Élément clé identifié",
     color: "#10B981",
     bg: "from-emerald-500/90 to-teal-600/90",
     points: 23,
-    delay: 4.7,
+    delay: 5.64,
   },
 ];
 
 const TOTAL_SCORE = QUALITY_ANNOTATIONS.reduce((s, a) => s + a.points, 0); // 96
 
-// Phase 2 — face detection boxes
-// Calibrated on same photo: bride ~left 20-40%, groom ~left 55-72%
+// Phase 2 — face detection boxes (perfect squares from Gemini, on 1920×1080)
+// Format: [Y_top, X_left, Y_bottom, X_right] → converted to SVG % of container
+// Container aspect: 2752:1536 ≈ 1920:1080 (same 16:9)
 const FACE_DETECTIONS = [
   {
-    // Bride face box
-    box: { x: 22, y: 16, w: 16, h: 20 },
+    // Sophie [230,440,500,710] → 270×270px square
+    // x=440/1920=22.9%, y=230/1080=21.3%, w=270/1920=14.1%, h=270/1080=25.0%
+    box: { x: 22.9, y: 21.3, w: 14.1, h: 25 },
     name: "Sophie",
     role: "Mariée",
     color: "#E879A0",
+    photo: "/face-sophie.png",
     photos: 127,
-    delay: 0.3,
+    delay: 0.36,
+    labelBelow: false,
   },
   {
-    // Groom face box
-    box: { x: 57, y: 13, w: 14, h: 18 },
+    // Thomas [175,1220,445,1490] → 270×270px square
+    // x=1220/1920=63.5%, y=175/1080=16.2%, w=14.1%, h=25.0%
+    box: { x: 63.5, y: 16.2, w: 14.1, h: 25 },
     name: "Thomas",
     role: "Marié",
     color: "#6366F1",
+    photo: "/face-thomas.png",
     photos: 98,
-    delay: 0.9,
+    delay: 1.08,
+    labelBelow: true,
   },
   {
-    // Guest suggested in background left
-    box: { x: 5, y: 22, w: 10, h: 13 },
+    // Marie [365,135,515,285] → 150×150px square
+    // x=135/1920=7.0%, y=365/1080=33.8%, w=150/1920=7.8%, h=150/1080=13.9%
+    box: { x: 7, y: 33.8, w: 7.8, h: 13.9 },
     name: "Marie",
     role: "Témoin",
     color: "#10B981",
+    photo: "/face-marie.png",
     photos: 43,
-    delay: 1.5,
+    delay: 1.8,
+    labelBelow: false,
   },
   {
-    // Guest suggested in background right
-    box: { x: 80, y: 20, w: 10, h: 13 },
+    // Luc [340,1650,490,1800] → 150×150px square
+    // x=1650/1920=85.9%, y=340/1080=31.5%, w=7.8%, h=13.9%
+    box: { x: 85.9, y: 31.5, w: 7.8, h: 13.9 },
     name: "Luc",
     role: "Famille",
     color: "#F59E0B",
+    photo: "/face-luc.png",
     photos: 31,
-    delay: 2.1,
+    delay: 2.52,
+    labelBelow: false,
   },
 ];
 
 type Phase = "idle" | "quality" | "transition" | "faces" | "done";
 type Phase2 = "idle" | "scanning" | "done";
 
-function Concept1Fusion() {
+export function Concept1Fusion() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [visibleAnnotations, setVisibleAnnotations] = useState<number[]>([]);
   const [displayScore, setDisplayScore] = useState(0);
@@ -165,19 +183,19 @@ function Concept1Fusion() {
         const from = i === 0 ? 0 : cumulativeScore(i - 1);
         const to = cumulativeScore(i);
         animate(from, to, {
-          duration: 0.7,
+          duration: 0.84,
           ease: "easeOut",
           onUpdate: (v) => setDisplayScore(Math.round(v)),
         });
       }, a.delay * 1000);
     });
 
-    // Transition between phases
-    const transitionAt = (QUALITY_ANNOTATIONS[QUALITY_ANNOTATIONS.length - 1].delay + 1.2) * 1000;
+    // Transition between phases (+20% pause)
+    const transitionAt = (QUALITY_ANNOTATIONS[QUALITY_ANNOTATIONS.length - 1].delay + 1.44) * 1000;
     t(() => setPhase("transition"), transitionAt);
 
-    // Phase 2: face recognition
-    const facesAt = transitionAt + 800;
+    // Phase 2: face recognition (+20%)
+    const facesAt = transitionAt + 960;
     t(() => {
       setPhase("faces");
       FACE_DETECTIONS.forEach((f, i) => {
@@ -185,18 +203,18 @@ function Concept1Fusion() {
       });
     }, facesAt);
 
-    // Done
-    t(() => setPhase("done"), facesAt + 3500);
-  };
-
-  const handleReplay = () => {
-    clearAllTimers();
-    setPhase("idle");
-    setVisibleAnnotations([]);
-    setDisplayScore(0);
-    setVisibleFaces([]);
-    setActiveGallery(null);
-    setTimeout(runSequence, 150);
+    // Done — pause 3s then restart automatically (+20%)
+    t(() => {
+      setPhase("done");
+      t(() => {
+        setPhase("idle");
+        setVisibleAnnotations([]);
+        setDisplayScore(0);
+        setVisibleFaces([]);
+        setActiveGallery(null);
+        t(runSequence, 360);
+      }, 3000);
+    }, facesAt + 4200);
   };
 
   useEffect(() => {
@@ -214,7 +232,7 @@ function Concept1Fusion() {
     <div
       ref={ref}
       className="relative w-full rounded-3xl overflow-hidden select-none"
-      style={{ height: "90vh", minHeight: 600 }}
+      style={{ aspectRatio: "2752 / 1536" }}
     >
       {/* Photo */}
       <img
@@ -320,7 +338,7 @@ function Concept1Fusion() {
         {showQuality && (
           <motion.div
             key="score-badge"
-            className="absolute top-4 left-1/2 -translate-x-1/2 z-10"
+            className="absolute top-4 right-4 z-10"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10, transition: { duration: 0.5 } }}
@@ -328,7 +346,7 @@ function Concept1Fusion() {
             <div className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-2xl px-5 py-3 text-center shadow-2xl">
               <div className="text-white/50 text-[10px] uppercase tracking-widest mb-1 flex items-center gap-1.5 justify-center">
                 <Zap className="w-3 h-3 text-amber-400" />
-                Analyse IA — Gemini 2.0
+                Scoring de la photo
               </div>
               <div className="flex items-end gap-1 justify-center">
                 <span className="text-white font-black text-4xl tabular-nums leading-none">{displayScore}</span>
@@ -426,7 +444,7 @@ function Concept1Fusion() {
         )}
       </AnimatePresence>
 
-      {/* ── PHASE 2 — face labels (floating cards above boxes) ── */}
+      {/* ── PHASE 2 — face labels (above or below box depending on position) ── */}
       <AnimatePresence>
         {showFaces && FACE_DETECTIONS.map((f, i) =>
           visibleFaces.includes(i) ? (
@@ -435,68 +453,77 @@ function Concept1Fusion() {
               className="absolute"
               style={{
                 left: `${f.box.x + f.box.w / 2}%`,
-                top: `${f.box.y - 1}%`,
-                transform: "translate(-50%, -100%)",
+                top: f.labelBelow
+                  ? `${f.box.y + f.box.h + 1}%`
+                  : `${f.box.y - 1}%`,
+                transform: f.labelBelow
+                  ? "translate(-50%, 0%)"
+                  : "translate(-50%, -100%)",
               }}
-              initial={{ opacity: 0, y: 8, scale: 0.85 }}
+              initial={{ opacity: 0, y: f.labelBelow ? -8 : 8, scale: 0.85 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 22, delay: 0.3 }}
             >
+              {f.labelBelow && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
               <div
-                className="rounded-xl px-3 py-2 shadow-xl border border-white/20 backdrop-blur-md text-center min-w-[110px]"
+                className="rounded-xl px-3 py-2 shadow-xl border border-white/20 backdrop-blur-md text-center min-w-[90px]"
                 style={{ background: `${f.color}cc` }}
               >
                 <div className="text-white font-bold text-xs">{f.name}</div>
                 <div className="text-white/70 text-[10px]">{f.role}</div>
               </div>
-              {/* Connector */}
-              <div className="w-px h-2 mx-auto" style={{ background: f.color }} />
+              {!f.labelBelow && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
             </motion.div>
           ) : null
         )}
       </AnimatePresence>
 
-      {/* ── PHASE 2 — gallery cards (right side panel) ── */}
+      {/* ── PHASE 2 — gallery cards in safe zone [50,800,400,1130] on 1920×1080 ── */}
+      {/* That's the column between Sophie's right shoulder and Thomas's left arm */}
       <AnimatePresence>
         {showFaces && (
           <motion.div
-            className="absolute top-4 right-4 flex flex-col gap-2 z-10"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
+            className="absolute flex flex-col gap-1.5 z-10"
+            style={{ left: "41.7%", top: "4.6%", width: "17.2%" }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
+            {/* Counter badge */}
+            <div className="bg-black/55 backdrop-blur-xl border border-emerald-400/30 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5">
+              <motion.div
+                className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
+                animate={{ opacity: [1, 0.2, 1] }}
+                transition={{ duration: 1.2, repeat: Infinity }}
+              />
+              <span className="text-emerald-300 text-[9px] font-semibold">
+                {visibleFaces.length} / {FACE_DETECTIONS.length} identifiées
+              </span>
+            </div>
+
             {FACE_DETECTIONS.map((f, i) =>
               visibleFaces.includes(i) ? (
                 <motion.div
                   key={`gallery-${f.name}`}
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
-                  className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-2xl px-3.5 py-2.5 flex items-center gap-3 cursor-pointer hover:bg-black/70 transition-all group"
+                  className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-xl px-2 py-1.5 flex items-center gap-2 cursor-pointer hover:bg-black/70 transition-all"
                   onClick={() => setActiveGallery(activeGallery === i ? null : i)}
                 >
+                  {/* Face photo avatar */}
                   <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow"
-                    style={{ background: f.color }}
+                    className="w-7 h-7 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]"
+                    style={{ borderColor: f.color }}
                   >
-                    {f.name[0]}
+                    <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
                   </div>
-                  <div>
-                    <div className="text-white font-semibold text-xs">{f.name} · {f.role}</div>
-                    <div className="text-white/50 text-[10px] flex items-center gap-1">
-                      <Images className="w-3 h-3" />
-                      {f.photos} photos · Galerie personnelle
-                    </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-white font-semibold text-[10px] leading-tight truncate">{f.name}</div>
+                    <div className="text-white/50 text-[8px] truncate">{f.role} · {f.photos} photos</div>
                   </div>
-                  <motion.div
-                    className="ml-auto w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: f.color }}
-                    whileHover={{ scale: 1.15 }}
-                  >
-                    <Check className="w-3 h-3 text-white" />
-                  </motion.div>
                 </motion.div>
               ) : null
             )}
@@ -507,13 +534,13 @@ function Concept1Fusion() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-2xl px-3.5 py-2.5"
+                className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-xl px-2 py-1.5"
               >
-                <div className="flex items-center gap-2">
-                  <ScanFace className="w-4 h-4 text-white flex-shrink-0" />
+                <div className="flex items-center gap-1.5">
+                  <ScanFace className="w-3.5 h-3.5 text-white flex-shrink-0" />
                   <div>
-                    <div className="text-white font-bold text-xs">Accès par selfie activé</div>
-                    <div className="text-white/60 text-[10px]">Chaque invité retrouve ses photos</div>
+                    <div className="text-white font-bold text-[9px]">Accès selfie activé</div>
+                    <div className="text-white/60 text-[8px]">Galerie perso. par invité</div>
                   </div>
                 </div>
               </motion.div>
@@ -522,43 +549,6 @@ function Concept1Fusion() {
         )}
       </AnimatePresence>
 
-      {/* ── Top indicator — phase label ── */}
-      <AnimatePresence>
-        {showFaces && (
-          <motion.div
-            className="absolute top-4 left-4 z-10"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="bg-black/55 backdrop-blur-xl border border-emerald-400/30 rounded-xl px-3.5 py-2 flex items-center gap-2">
-              <motion.div
-                className="w-2 h-2 rounded-full bg-emerald-400"
-                animate={{ opacity: [1, 0.2, 1] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-              />
-              <span className="text-emerald-300 text-xs font-semibold">
-                {visibleFaces.length} / {FACE_DETECTIONS.length} personnes identifiées
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Replay button ── */}
-      {(phase === "done") && (
-        <motion.button
-          onClick={handleReplay}
-          className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white/70 hover:text-white px-3 py-1.5 rounded-full text-xs transition-all z-20"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <RefreshCw className="w-3 h-3" />
-          Rejouer
-        </motion.button>
-      )}
 
       {/* ── Bottom title ── */}
       <div className="absolute inset-x-0 bottom-0 p-8">
@@ -710,7 +700,7 @@ function Concept2() {
       {phase === "done" && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mt-5 text-center">
           <h3 className="text-white text-2xl font-serif font-bold mb-2">Vos 4 847 photos triées pendant que vous dormez.</h3>
-          <p className="text-white/40 text-sm">Gemini analyse 26 critères par photo.</p>
+          <p className="text-white/40 text-sm">L'IA analyse 26 critères par photo.</p>
         </motion.div>
       )}
     </div>

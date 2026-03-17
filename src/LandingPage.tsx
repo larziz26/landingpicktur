@@ -5,6 +5,7 @@ import {
   Globe, Play, ScanFace, BookOpen, Sparkles, Award, Heart,
   TrendingUp, Gift
 } from "lucide-react";
+import { Concept1Fusion } from "./pages/HeroSandbox";
 
 // ─── Types & i18n ─────────────────────────────────────────────────────────────
 type Lang = "fr" | "en";
@@ -769,34 +770,31 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden pt-20 pb-16 px-6">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-radial from-amber-100/60 via-rose-50/30 to-transparent rounded-full blur-3xl" />
-        </div>
+      {/* ── Hero — animation en pleine largeur, puis CTA en dessous ── */}
+      <section className="relative overflow-hidden pt-16">
+        {/* Animation hero banner */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="relative max-w-6xl mx-auto px-4"
+        >
+          <Concept1Fusion />
+        </motion.div>
 
-        <div className="relative max-w-4xl mx-auto text-center">
+        {/* Sous-titre + CTA sous l'animation */}
+        <div className="relative max-w-4xl mx-auto text-center px-6 mt-10 pb-12">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-full px-4 py-1.5 text-xs text-stone-500 mb-8 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              {tr.hero.badge}
+            <div className="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-full px-4 py-1.5 text-xs text-stone-500 mb-6 shadow-sm">
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              Tri IA · Galeries premium · Reconnaissance faciale · Albums physiques
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-stone-900 leading-[1.05] tracking-tight mb-6">
-              {tr.hero.h1a}{" "}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-violet-500">
-                  {tr.hero.h1b}
-                </span>
-                <span className="absolute inset-x-0 bottom-1 h-3 bg-gradient-to-r from-rose-200/60 to-violet-200/60 -z-10 blur-sm rounded" />
-              </span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto mb-8 leading-relaxed">
               {tr.hero.sub}
             </p>
 
@@ -827,31 +825,6 @@ export default function LandingPage() {
             </p>
           </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="relative max-w-4xl mx-auto mt-14"
-        >
-          <div className="rounded-2xl overflow-hidden border border-stone-200 shadow-2xl bg-stone-900 aspect-video flex items-center justify-center cursor-pointer group">
-            <div className="absolute inset-0 bg-gradient-to-br from-stone-800 to-stone-900" />
-            <div className="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuMyIvPjwvc3ZnPg==')]" />
-            <div className="relative z-10 flex flex-col items-center gap-4">
-              <motion.div
-                whileHover={{ scale: 1.08 }}
-                className="w-16 h-16 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/25 transition-all"
-              >
-                <Play className="w-7 h-7 text-white fill-white ml-1" />
-              </motion.div>
-              <span className="text-white/60 text-sm">{tr.hero.videoLabel}</span>
-            </div>
-          </div>
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white border border-stone-200 rounded-full px-4 py-1.5 text-xs text-stone-500 shadow-md flex items-center gap-2">
-            <Zap className="w-3.5 h-3.5 text-amber-500" />
-            Tri IA · Galeries premium · Reconnaissance faciale · Albums physiques
-          </div>
-        </motion.div>
       </section>
 
       {/* ── Stats band ── */}
