@@ -145,8 +145,57 @@ const FACE_DETECTIONS = [
 
 type Phase = "idle" | "quality" | "transition" | "faces" | "done";
 type Phase2 = "idle" | "scanning" | "done";
+type Lang = "fr" | "en";
 
-export function Concept1Fusion() {
+const T = {
+  fr: {
+    annotations: [
+      { label: "Yeux ouverts", value: "✓", detail: "Les deux sujets" },
+      { label: "Netteté", value: "97%", detail: "Mise au point parfaite" },
+      { label: "Mariée détectée", value: "✓", detail: "Visage identifié" },
+      { label: "Marié détecté", value: "✓", detail: "Visage identifié" },
+      { label: "Bouquet de fleurs", value: "Détecté", detail: "Élément clé identifié" },
+    ],
+    roles: ["Mariée", "Marié", "Témoin", "Famille"],
+    scoreBadge: "Scoring de la photo",
+    transitionTitle: "Analyse qualité terminée",
+    transitionSub: "Reconnaissance des personnes en cours…",
+    identified: "identifiées",
+    selfieAccess: "Accès selfie activé",
+    selfieGallery: "Galerie perso. par invité",
+    titleQuality: "La plateforme qui",
+    titleQualityAccent: "révèle chaque mariage.",
+    titleQualitySub: "26 critères analysés · Score en quelques secondes",
+    titleFaces: "Chaque invité retrouve",
+    titleFacesAccent: "ses photos. En un selfie.",
+    titleFacesSub: "Picktur identifie automatiquement chaque personne · Galerie personnelle instantanée",
+  },
+  en: {
+    annotations: [
+      { label: "Eyes open", value: "✓", detail: "Both subjects" },
+      { label: "Sharpness", value: "97%", detail: "Perfect focus" },
+      { label: "Bride detected", value: "✓", detail: "Face identified" },
+      { label: "Groom detected", value: "✓", detail: "Face identified" },
+      { label: "Flower bouquet", value: "Detected", detail: "Key element found" },
+    ],
+    roles: ["Bride", "Groom", "Witness", "Family"],
+    scoreBadge: "Photo scoring",
+    transitionTitle: "Quality analysis complete",
+    transitionSub: "Identifying people…",
+    identified: "identified",
+    selfieAccess: "Selfie access enabled",
+    selfieGallery: "Personal gallery per guest",
+    titleQuality: "The platform that",
+    titleQualityAccent: "reveals every wedding.",
+    titleQualitySub: "26 criteria analyzed · Score in seconds",
+    titleFaces: "Every guest finds",
+    titleFacesAccent: "their photos. In one selfie.",
+    titleFacesSub: "Picktur automatically identifies each person · Instant personal gallery",
+  },
+};
+
+export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
+  const tr = T[lang];
   const [phase, setPhase] = useState<Phase>("idle");
   const [visibleAnnotations, setVisibleAnnotations] = useState<number[]>([]);
   const [displayScore, setDisplayScore] = useState(0);
@@ -242,12 +291,12 @@ export function Concept1Fusion() {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/45" />
 
-      {/* ── PHASE 1 SVG — quality annotation lines ── */}
+      {/* ── PHASE 1 SVG — quality annotation lines (desktop only) ── */}
       <AnimatePresence>
         {showQuality && (
           <motion.svg
             key="quality-svg"
-            className="absolute inset-0 w-full h-full pointer-events-none"
+            className="absolute inset-0 w-full h-full pointer-events-none hidden md:block"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
             initial={{ opacity: 1 }}
@@ -309,12 +358,12 @@ export function Concept1Fusion() {
         ))}
       </AnimatePresence>
 
-      {/* ── PHASE 1 — glassmorphism badges ── */}
+      {/* ── PHASE 1 — glassmorphism badges (desktop only) ── */}
       <AnimatePresence>
         {showQuality && QUALITY_ANNOTATIONS.map((a, i) => (
           <motion.div
             key={`badge-${i}`}
-            className="absolute"
+            className="absolute hidden md:block"
             style={{ left: `${a.badge.x}%`, top: `${a.badge.y}%` }}
             initial={{ opacity: 0, x: i < 2 ? -18 : 18, scale: 0.85 }}
             animate={visibleAnnotations.includes(i) ? { opacity: 1, x: 0, scale: 1 } : {}}
@@ -325,9 +374,9 @@ export function Concept1Fusion() {
               className="rounded-2xl px-3.5 py-2.5 shadow-2xl border border-white/20 backdrop-blur-md min-w-[138px]"
               style={{ background: `linear-gradient(135deg, ${a.color}cc, ${a.color}88)` }}
             >
-              <div className="text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5">{a.label}</div>
-              <div className="text-white font-bold text-base leading-tight">{a.value}</div>
-              <div className="text-white/60 text-[10px] mt-0.5">{a.detail}</div>
+              <div className="text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5">{tr.annotations[i].label}</div>
+              <div className="text-white font-bold text-base leading-tight">{tr.annotations[i].value}</div>
+              <div className="text-white/60 text-[10px] mt-0.5">{tr.annotations[i].detail}</div>
             </div>
           </motion.div>
         ))}
@@ -343,16 +392,16 @@ export function Concept1Fusion() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10, transition: { duration: 0.5 } }}
           >
-            <div className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-2xl px-5 py-3 text-center shadow-2xl">
-              <div className="text-white/50 text-[10px] uppercase tracking-widest mb-1 flex items-center gap-1.5 justify-center">
-                <Zap className="w-3 h-3 text-amber-400" />
-                Scoring de la photo
+            <div className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-2xl px-3 py-2 md:px-5 md:py-3 text-center shadow-2xl">
+              <div className="text-white/50 text-[9px] uppercase tracking-widest mb-0.5 md:mb-1 flex items-center gap-1 md:gap-1.5 justify-center">
+                <Zap className="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-400" />
+                {tr.scoreBadge}
               </div>
               <div className="flex items-end gap-1 justify-center">
-                <span className="text-white font-black text-4xl tabular-nums leading-none">{displayScore}</span>
-                <span className="text-white/40 text-xl font-bold mb-0.5">/ {TOTAL_SCORE}</span>
+                <span className="text-white font-black text-2xl md:text-4xl tabular-nums leading-none">{displayScore}</span>
+                <span className="text-white/40 text-sm md:text-xl font-bold mb-0.5">/ {TOTAL_SCORE}</span>
               </div>
-              <div className="mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden w-36 mx-auto">
+              <div className="mt-1.5 md:mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden w-20 md:w-36 mx-auto">
                 <motion.div
                   className="h-full rounded-full bg-gradient-to-r from-violet-400 via-pink-400 to-amber-400"
                   animate={{ width: `${pct}%` }}
@@ -374,16 +423,16 @@ export function Concept1Fusion() {
             exit={{ opacity: 0, scale: 1.05 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="bg-black/70 backdrop-blur-xl border border-violet-400/30 rounded-2xl px-8 py-5 text-center shadow-2xl">
+            <div className="bg-black/70 backdrop-blur-xl border border-violet-400/30 rounded-2xl px-4 py-3 md:px-8 md:py-5 text-center shadow-2xl">
               <div className="flex items-center gap-2 justify-center mb-1">
                 <motion.div
                   className="w-2 h-2 rounded-full bg-violet-400"
                   animate={{ opacity: [1, 0.2, 1] }}
                   transition={{ duration: 0.8, repeat: Infinity }}
                 />
-                <span className="text-violet-300 text-sm font-semibold">Analyse qualité terminée</span>
+                <span className="text-violet-300 text-xs md:text-sm font-semibold">{tr.transitionTitle}</span>
               </div>
-              <p className="text-white/50 text-xs">Reconnaissance des personnes en cours…</p>
+              <p className="text-white/50 text-[10px] md:text-xs">{tr.transitionSub}</p>
             </div>
           </motion.div>
         )}
@@ -467,11 +516,11 @@ export function Concept1Fusion() {
             >
               {f.labelBelow && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
               <div
-                className="rounded-xl px-3 py-2 shadow-xl border border-white/20 backdrop-blur-md text-center min-w-[90px]"
+                className="rounded-xl px-2 py-1 md:px-3 md:py-2 shadow-xl border border-white/20 backdrop-blur-md text-center min-w-[60px] md:min-w-[90px]"
                 style={{ background: `${f.color}cc` }}
               >
-                <div className="text-white font-bold text-xs">{f.name}</div>
-                <div className="text-white/70 text-[10px]">{f.role}</div>
+                <div className="text-white font-bold text-[10px] md:text-xs">{f.name}</div>
+                <div className="text-white/70 text-[8px] md:text-[10px]">{tr.roles[i]}</div>
               </div>
               {!f.labelBelow && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
             </motion.div>
@@ -484,7 +533,7 @@ export function Concept1Fusion() {
       <AnimatePresence>
         {showFaces && (
           <motion.div
-            className="absolute flex flex-col gap-1.5 z-10"
+            className="absolute flex-col gap-1.5 z-10 hidden md:flex"
             style={{ left: "41.7%", top: "4.6%", width: "17.2%" }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -499,7 +548,7 @@ export function Concept1Fusion() {
                 transition={{ duration: 1.2, repeat: Infinity }}
               />
               <span className="text-emerald-300 text-[9px] font-semibold">
-                {visibleFaces.length} / {FACE_DETECTIONS.length} identifiées
+                {visibleFaces.length} / {FACE_DETECTIONS.length} {tr.identified}
               </span>
             </div>
 
@@ -522,7 +571,7 @@ export function Concept1Fusion() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="text-white font-semibold text-[10px] leading-tight truncate">{f.name}</div>
-                    <div className="text-white/50 text-[8px] truncate">{f.role} · {f.photos} photos</div>
+                    <div className="text-white/50 text-[8px] truncate">{tr.roles[i]} · {f.photos} photos</div>
                   </div>
                 </motion.div>
               ) : null
@@ -539,8 +588,8 @@ export function Concept1Fusion() {
                 <div className="flex items-center gap-1.5">
                   <ScanFace className="w-3.5 h-3.5 text-white flex-shrink-0" />
                   <div>
-                    <div className="text-white font-bold text-[9px]">Accès selfie activé</div>
-                    <div className="text-white/60 text-[8px]">Galerie perso. par invité</div>
+                    <div className="text-white font-bold text-[9px]">{tr.selfieAccess}</div>
+                    <div className="text-white/60 text-[8px]">{tr.selfieGallery}</div>
                   </div>
                 </div>
               </motion.div>
@@ -551,7 +600,7 @@ export function Concept1Fusion() {
 
 
       {/* ── Bottom title ── */}
-      <div className="absolute inset-x-0 bottom-0 p-8">
+      <div className="absolute inset-x-0 bottom-0 p-3 md:p-8">
         <AnimatePresence mode="wait">
           {showQuality && (
             <motion.div
@@ -561,13 +610,13 @@ export function Concept1Fusion() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-white leading-tight">
-                La plateforme qui{" "}
+              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
+                {tr.titleQuality}{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-pink-300 to-violet-300">
-                  révèle chaque mariage.
+                  {tr.titleQualityAccent}
                 </span>
               </h2>
-              <p className="text-white/50 text-base mt-2">26 critères analysés · Score en quelques secondes</p>
+              <p className="text-white/50 text-[10px] sm:text-sm md:text-base mt-1 md:mt-2">{tr.titleQualitySub}</p>
             </motion.div>
           )}
           {showFaces && (
@@ -578,14 +627,14 @@ export function Concept1Fusion() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-white leading-tight">
-                Chaque invité retrouve{" "}
+              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
+                {tr.titleFaces}{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-violet-300">
-                  ses photos. En un selfie.
+                  {tr.titleFacesAccent}
                 </span>
               </h2>
-              <p className="text-white/50 text-base mt-2">
-                Picktur identifie automatiquement chaque personne · Galerie personnelle instantanée
+              <p className="text-white/50 text-[10px] sm:text-sm md:text-base mt-1 md:mt-2">
+                {tr.titleFacesSub}
               </p>
             </motion.div>
           )}

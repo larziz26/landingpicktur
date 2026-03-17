@@ -837,7 +837,7 @@ export default function LandingPage() {
           transition={{ delay: 0.25, duration: 0.7 }}
           className="relative max-w-6xl mx-auto px-4 pb-12"
         >
-          <Concept1Fusion />
+          <Concept1Fusion lang={lang} />
         </motion.div>
       </section>
 
