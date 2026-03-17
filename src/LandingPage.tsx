@@ -19,15 +19,15 @@ const copy = {
       h1b: "L'expérience que vos clients n'oublieront pas.",
       sub: "Picktur score vos photos par IA, identifie chaque visage et génère vos galeries. Livrez dès le lendemain : vos invités se retrouvent par selfie et vos clients sélectionnent leurs favoris pour l'album en un clic.",
       cta1: "Commencer gratuitement",
-      cta2: "Voir la démo",
-      proof: "+200 photographes l'utilisent déjà",
+      cta2: "Explorer les fonctionnalités",
+      proof: "Rejoignez les premiers photographes",
       videoLabel: "Démo en 90 secondes",
     },
     stats: [
-      { value: "8h", label: "économisées par mariage en moyenne" },
-      { value: "94%", label: "de satisfaction client" },
-      { value: "2 min", label: "pour livrer une galerie" },
-      { value: "0 effort", label: "de tri manuel" },
+      { value: "26", label: "critères analysés par photo" },
+      { value: "< 5 min", label: "pour livrer une galerie" },
+      { value: "1 selfie", label: "pour retrouver toutes ses photos" },
+      { value: "1 week-end", label: "pour réaliser un album" },
     ],
     aiSection: {
       badge: "Tri IA intelligent",
@@ -59,6 +59,47 @@ const copy = {
       sub: "Vos couleurs, votre logo, vos liens personnalisés. Une expérience que vos clients n'oublieront pas.",
       features: ["Lien personnalisé picktur.fr/votre-nom", "Téléchargement HD en un clic", "Protection par mot de passe", "Navigation intuitive"],
     },
+    howItWorks: {
+      badge: "Comment ça marche",
+      h2: "De l'appareil à la galerie livrée. En quelques heures.",
+      steps: [
+        {
+          num: "01",
+          title: "Créez votre collection",
+          desc: "Nommez le mariage, ajoutez la date et le lieu. Votre espace de travail est prêt en 30 secondes.",
+        },
+        {
+          num: "02",
+          title: "Uploadez par événement",
+          desc: "Mairie, vin d'honneur, soirée — importez les photos par séquence et taguez chaque lot. La galerie se structure seule.",
+        },
+        {
+          num: "03",
+          title: "Lancez le Smart Scoring",
+          desc: "L'IA analyse chaque photo sur 26 critères pendant que vous faites autre chose. Les meilleures remontent automatiquement.",
+        },
+        {
+          num: "04",
+          title: "Partagez — c'est fait",
+          desc: "Envoyez le lien protégé dès le lendemain. Vos invités retrouvent leurs photos en selfie. Votre client sélectionne ses favoris pour l'album.",
+        },
+      ],
+    },
+    comparison: {
+      badge: "Pourquoi changer ?",
+      h2: "Picktur vs Pixieset",
+      sub: "Pixieset fait de belles galeries. Picktur transforme l'expérience entière — avant, pendant et après la livraison.",
+      rows: [
+        { feature: "Tri IA sur 26 critères", picktur: true, pixieset: false, wetransfer: false },
+        { feature: "Reconnaissance faciale", picktur: true, pixieset: false, wetransfer: false },
+        { feature: "Galerie personnelle par selfie", picktur: true, pixieset: false, wetransfer: false },
+        { feature: "Sélection album par le client", picktur: true, pixieset: true, wetransfer: false },
+        { feature: "Galeries protégées par mot de passe", picktur: true, pixieset: true, wetransfer: false },
+        { feature: "Lien personnalisé", picktur: true, pixieset: true, wetransfer: false },
+        { feature: "Prix de départ", picktur: "19€/mois", pixieset: "~25€/mois", wetransfer: "Gratuit limité" },
+      ],
+      cta: "Essayer Picktur gratuitement",
+    },
     albumSection: {
       badge: "Album physique",
       h2: "Du numérique à l'album. En quelques clics.",
@@ -79,19 +120,21 @@ const copy = {
       h2: "Un abonnement qui s'adapte à votre volume.",
       sub: "Choisissez selon votre stockage. Changez de plan à tout moment.",
       toggle: ["Mensuel", "Annuel"],
-      save: "−2 mois offerts",
+      save: "−1 mois offert",
+      aiToggle: ["Sans tri IA", "Tri IA activé"],
+      aiNote: "Option non désactivable après souscription",
       plans: [
         {
           name: "Essentiel", storage: "120 Go",
-          price: { m: "15€", y: "129€" }, period: { m: "/ mois", y: "/ an" },
+          price: { m: "19€", y: "209€" }, priceAi: { m: "25€", y: "275€" }, period: { m: "/ mois", y: "/ an" },
           badge: null, highlight: false,
           desc: "Pour démarrer sereinement.",
-          features: ["120 Go de stockage", "Mariages illimités", "Tri IA inclus", "Galeries partageables", "Reconnaissance faciale", "Lien personnalisé"],
+          features: ["120 Go de stockage", "Mariages illimités", "Galeries partageables", "Reconnaissance faciale", "Lien personnalisé"],
           cta: "Démarrer",
         },
         {
           name: "Pro", storage: "360 Go",
-          price: { m: "29€", y: "249€" }, period: { m: "/ mois", y: "/ an" },
+          price: { m: "35€", y: "385€" }, priceAi: { m: "46€", y: "506€" }, period: { m: "/ mois", y: "/ an" },
           badge: "Le plus populaire", highlight: true,
           desc: "Le choix des photographes actifs.",
           features: ["360 Go de stockage", "Tout Essentiel +", "Sélection dynamique", "Album physique", "Support prioritaire", "Statistiques détaillées"],
@@ -99,7 +142,7 @@ const copy = {
         },
         {
           name: "Studio", storage: "720 Go",
-          price: { m: "49€", y: "419€" }, period: { m: "/ mois", y: "/ an" },
+          price: { m: "59€", y: "649€" }, priceAi: { m: "77€", y: "847€" }, period: { m: "/ mois", y: "/ an" },
           badge: null, highlight: false,
           desc: "Pour les photographes intensifs.",
           features: ["720 Go de stockage", "Tout Pro +", "Multi-utilisateurs", "API & webhooks", "Accompagnement dédié"],
@@ -165,15 +208,15 @@ const copy = {
       h1b: "The experience your clients will never forget.",
       sub: "Picktur scores your photos with AI, identifies every face and generates your galleries. Deliver the next day: guests find themselves by selfie and clients pick their album favorites in one click.",
       cta1: "Start for free",
-      cta2: "Watch demo",
-      proof: "200+ photographers already use it",
+      cta2: "Explore features",
+      proof: "Join the first photographers",
       videoLabel: "90-second demo",
     },
     stats: [
-      { value: "8h", label: "saved per wedding on average" },
-      { value: "94%", label: "client satisfaction" },
-      { value: "2 min", label: "to deliver a gallery" },
-      { value: "0 effort", label: "manual culling" },
+      { value: "26", label: "criteria analyzed per photo" },
+      { value: "< 5 min", label: "to deliver a gallery" },
+      { value: "1 selfie", label: "to find all your photos" },
+      { value: "1 weekend", label: "to create an album" },
     ],
     aiSection: {
       badge: "AI-powered culling",
@@ -205,6 +248,47 @@ const copy = {
       sub: "Your colors, your logo, your custom links. An experience your clients won't forget.",
       features: ["Custom link picktur.fr/your-name", "One-click HD download", "Password protection", "Intuitive browsing"],
     },
+    howItWorks: {
+      badge: "How it works",
+      h2: "From camera to delivered gallery. In a few hours.",
+      steps: [
+        {
+          num: "01",
+          title: "Create your collection",
+          desc: "Name the wedding, add the date and venue. Your workspace is ready in 30 seconds.",
+        },
+        {
+          num: "02",
+          title: "Upload by event",
+          desc: "City hall, cocktail hour, reception — import photos by sequence and tag each batch. The gallery structures itself.",
+        },
+        {
+          num: "03",
+          title: "Launch Smart Scoring",
+          desc: "AI analyzes every photo on 26 criteria while you do something else. The best ones surface automatically.",
+        },
+        {
+          num: "04",
+          title: "Share — done",
+          desc: "Send the protected link the next day. Guests find their photos by selfie. Your client picks their album favorites.",
+        },
+      ],
+    },
+    comparison: {
+      badge: "Why switch?",
+      h2: "Picktur vs Pixieset",
+      sub: "Pixieset makes beautiful galleries. Picktur transforms the entire experience — before, during and after delivery.",
+      rows: [
+        { feature: "AI culling on 26 criteria", picktur: true, pixieset: false, wetransfer: false },
+        { feature: "Face recognition", picktur: true, pixieset: false, wetransfer: false },
+        { feature: "Personal gallery by selfie", picktur: true, pixieset: false, wetransfer: false },
+        { feature: "Album selection by client", picktur: true, pixieset: true, wetransfer: false },
+        { feature: "Password-protected galleries", picktur: true, pixieset: true, wetransfer: false },
+        { feature: "Custom link", picktur: true, pixieset: true, wetransfer: false },
+        { feature: "Starting price", picktur: "€19/mo", pixieset: "~€25/mo", wetransfer: "Free limited" },
+      ],
+      cta: "Try Picktur for free",
+    },
     albumSection: {
       badge: "Physical album",
       h2: "From digital to album. In a few clicks.",
@@ -225,19 +309,21 @@ const copy = {
       h2: "A subscription that fits your volume.",
       sub: "Choose by storage. Switch plans anytime.",
       toggle: ["Monthly", "Yearly"],
-      save: "−2 months free",
+      save: "−1 month free",
+      aiToggle: ["No AI culling", "AI culling on"],
+      aiNote: "Cannot be deactivated after subscribing",
       plans: [
         {
           name: "Essential", storage: "120 GB",
-          price: { m: "€15", y: "€129" }, period: { m: "/ month", y: "/ year" },
+          price: { m: "€19", y: "€209" }, priceAi: { m: "€25", y: "€275" }, period: { m: "/ month", y: "/ year" },
           badge: null, highlight: false,
           desc: "Start without breaking the bank.",
-          features: ["120 GB storage", "Unlimited weddings", "AI culling included", "Shareable galleries", "Face recognition", "Custom link"],
+          features: ["120 GB storage", "Unlimited weddings", "Shareable galleries", "Face recognition", "Custom link"],
           cta: "Get started",
         },
         {
           name: "Pro", storage: "360 GB",
-          price: { m: "€29", y: "€249" }, period: { m: "/ month", y: "/ year" },
+          price: { m: "€35", y: "€385" }, priceAi: { m: "€46", y: "€506" }, period: { m: "/ month", y: "/ year" },
           badge: "Most popular", highlight: true,
           desc: "The choice of active photographers.",
           features: ["360 GB storage", "Everything in Essential +", "Dynamic selection", "Physical album", "Priority support", "Detailed analytics"],
@@ -245,7 +331,7 @@ const copy = {
         },
         {
           name: "Studio", storage: "720 GB",
-          price: { m: "€49", y: "€419" }, period: { m: "/ month", y: "/ year" },
+          price: { m: "€59", y: "€649" }, priceAi: { m: "€77", y: "€847" }, period: { m: "/ month", y: "/ year" },
           badge: null, highlight: false,
           desc: "For high-volume photographers.",
           features: ["720 GB storage", "Everything in Pro +", "Multi-user access", "API & webhooks", "Dedicated onboarding"],
@@ -729,6 +815,7 @@ const APP_URL = "https://app.picktur.fr/auth";
 export default function LandingPage() {
   const [lang, setLang] = useState<Lang>("fr");
   const [yearly, setYearly] = useState(false);
+  const [aiCulling, setAiCulling] = useState(true);
   const tr = copy[lang];
 
   return (
@@ -859,6 +946,40 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── How it works ── */}
+      <section className="py-24 px-6 bg-white border-t border-stone-100">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 bg-stone-100 border border-stone-200 rounded-full px-3 py-1 text-xs text-stone-600 mb-5">
+              <Zap className="w-3.5 h-3.5" />
+              {tr.howItWorks.badge}
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-stone-900">{tr.howItWorks.h2}</h2>
+          </div>
+          <div className="grid md:grid-cols-4 gap-6">
+            {tr.howItWorks.steps.map((step, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="relative"
+              >
+                {i < tr.howItWorks.steps.length - 1 && (
+                  <div className="hidden md:block absolute top-6 left-[calc(100%-12px)] w-6 h-px bg-stone-200 z-10" />
+                )}
+                <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6 h-full hover:border-stone-300 hover:shadow-sm transition-all">
+                  <div className="text-3xl font-black text-stone-200 mb-3">{step.num}</div>
+                  <h3 className="font-bold text-stone-900 mb-2">{step.title}</h3>
+                  <p className="text-sm text-stone-500 leading-relaxed">{step.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── AI Scoring ── */}
       <section id="features" className="py-24 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
@@ -968,6 +1089,63 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Comparison ── */}
+      <section className="py-24 px-6 border-t border-stone-100">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-100 rounded-full px-3 py-1 text-xs text-rose-600 mb-5">
+              <Star className="w-3.5 h-3.5" />
+              {tr.comparison.badge}
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-3">{tr.comparison.h2}</h2>
+            <p className="text-stone-500">{tr.comparison.sub}</p>
+          </div>
+          <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm">
+            {/* Header */}
+            <div className="grid grid-cols-4 bg-stone-50 border-b border-stone-200">
+              <div className="p-4 text-sm font-semibold text-stone-500">Fonctionnalité</div>
+              <div className="p-4 text-sm font-bold text-stone-900 text-center border-l border-stone-200 bg-stone-900 text-white">Picktur</div>
+              <div className="p-4 text-sm font-semibold text-stone-500 text-center border-l border-stone-200">Pixieset</div>
+              <div className="p-4 text-sm font-semibold text-stone-400 text-center border-l border-stone-200">WeTransfer</div>
+            </div>
+            {/* Rows */}
+            {tr.comparison.rows.map((row, i) => (
+              <div key={i} className={`grid grid-cols-4 border-b border-stone-100 last:border-0 ${i % 2 === 0 ? "" : "bg-stone-50/50"}`}>
+                <div className="p-4 text-sm text-stone-700 flex items-center">{row.feature}</div>
+                <div className="p-4 flex items-center justify-center border-l border-stone-200 bg-stone-900/5">
+                  {typeof row.picktur === "boolean" ? (
+                    row.picktur ? <Check className="w-5 h-5 text-emerald-500" /> : <span className="w-5 h-5 flex items-center justify-center text-stone-300 text-lg">—</span>
+                  ) : (
+                    <span className="text-xs font-semibold text-stone-900">{row.picktur}</span>
+                  )}
+                </div>
+                <div className="p-4 flex items-center justify-center border-l border-stone-200">
+                  {typeof row.pixieset === "boolean" ? (
+                    row.pixieset ? <Check className="w-5 h-5 text-stone-400" /> : <span className="w-5 h-5 flex items-center justify-center text-stone-200 text-lg">—</span>
+                  ) : (
+                    <span className="text-xs text-stone-500">{row.pixieset}</span>
+                  )}
+                </div>
+                <div className="p-4 flex items-center justify-center border-l border-stone-200">
+                  {typeof row.wetransfer === "boolean" ? (
+                    row.wetransfer ? <Check className="w-5 h-5 text-stone-400" /> : <span className="w-5 h-5 flex items-center justify-center text-stone-200 text-lg">—</span>
+                  ) : (
+                    <span className="text-xs text-stone-400">{row.wetransfer}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <a href={APP_URL}>
+              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-7 py-3.5 rounded-xl hover:bg-stone-800 transition-all font-medium text-base shadow-md hover:shadow-lg">
+                {tr.comparison.cta} <ArrowRight className="w-4 h-4" />
+              </button>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* ── Couples / Affiliation ── */}
       <section className="py-24 px-6 border-t border-stone-100 bg-white">
         <div className="max-w-4xl mx-auto text-center mb-12">
@@ -1013,18 +1191,33 @@ export default function LandingPage() {
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2">{tr.pricing.h2}</h2>
             <p className="text-stone-400 text-sm">{tr.pricing.sub}</p>
-            <div className="flex items-center gap-3 justify-center mt-6">
-              <span className={`text-sm ${!yearly ? "text-stone-900 font-medium" : "text-stone-400"}`}>{tr.pricing.toggle[0]}</span>
-              <button
-                onClick={() => setYearly(!yearly)}
-                className={`relative w-11 h-6 rounded-full transition-colors ${yearly ? "bg-stone-900" : "bg-stone-200"}`}
-              >
-                <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${yearly ? "translate-x-6" : "translate-x-1"}`} />
-              </button>
-              <span className={`text-sm ${yearly ? "text-stone-900 font-medium" : "text-stone-400"}`}>{tr.pricing.toggle[1]}</span>
-              {yearly && (
-                <span className="text-xs bg-emerald-100 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">{tr.pricing.save}</span>
-              )}
+            <div className="flex flex-col items-center gap-3 mt-6">
+              <div className="flex items-center gap-3">
+                <span className={`text-sm ${!yearly ? "text-stone-900 font-medium" : "text-stone-400"}`}>{tr.pricing.toggle[0]}</span>
+                <button
+                  onClick={() => setYearly(!yearly)}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${yearly ? "bg-stone-900" : "bg-stone-200"}`}
+                >
+                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${yearly ? "translate-x-6" : "translate-x-1"}`} />
+                </button>
+                <span className={`text-sm ${yearly ? "text-stone-900 font-medium" : "text-stone-400"}`}>{tr.pricing.toggle[1]}</span>
+                {yearly && (
+                  <span className="text-xs bg-emerald-100 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">{tr.pricing.save}</span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`text-sm ${!aiCulling ? "text-stone-900 font-medium" : "text-stone-400"}`}>{tr.pricing.aiToggle[0]}</span>
+                <button
+                  onClick={() => setAiCulling(!aiCulling)}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${aiCulling ? "bg-violet-600" : "bg-stone-200"}`}
+                >
+                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${aiCulling ? "translate-x-6" : "translate-x-1"}`} />
+                </button>
+                <span className={`text-sm ${aiCulling ? "text-violet-700 font-medium" : "text-stone-400"}`}>{tr.pricing.aiToggle[1]}</span>
+                {aiCulling && (
+                  <span className="text-xs bg-amber-100 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">{tr.pricing.aiNote}</span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -1051,7 +1244,7 @@ export default function LandingPage() {
                   <p className={`text-sm ${plan.highlight ? "text-white/60" : "text-stone-400"}`}>{plan.desc}</p>
                 </div>
                 <div className="mb-6">
-                  <span className={`text-4xl font-black ${plan.highlight ? "text-white" : "text-stone-900"}`}>{yearly ? plan.price.y : plan.price.m}</span>
+                  <span className={`text-4xl font-black ${plan.highlight ? "text-white" : "text-stone-900"}`}>{aiCulling ? (yearly ? (plan as any).priceAi.y : (plan as any).priceAi.m) : (yearly ? plan.price.y : plan.price.m)}</span>
                   <span className={`text-sm ml-1 ${plan.highlight ? "text-white/50" : "text-stone-400"}`}>{yearly ? plan.period.y : plan.period.m}</span>
                 </div>
                 <ul className="space-y-2.5 flex-1 mb-7">
