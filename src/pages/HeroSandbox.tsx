@@ -63,7 +63,7 @@ const QUALITY_ANNOTATIONS = [
   },
   {
     dot: { x: 70.6, y: 28.7 },     // Thomas face center (1355/1920=70.6%, 310/1080=28.7%)
-    badge: { x: 42, y: 37 },
+    badge: { x: 42, y: 24 },
     lineEnd: { x: 54, y: 28 },
     label: "Marié détecté",
     value: "✓",
@@ -383,14 +383,14 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
           >
             <div
-              className="rounded-xl md:rounded-2xl px-2 py-1 md:px-3.5 md:py-2.5 shadow-2xl border border-white/20 backdrop-blur-md min-w-[72px] md:min-w-[138px]"
+              className="rounded-xl md:rounded-2xl px-2 py-1 md:px-5 md:py-3 shadow-2xl border border-white/20 backdrop-blur-md min-w-[72px] md:min-w-[158px]"
               style={{ background: `linear-gradient(135deg, ${a.color}cc, ${a.color}88)` }}
             >
               <div className="text-[7px] md:text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5 hidden md:block">{tr.annotations[i].label}</div>
-              {(!isMobile || tr.annotations[i].value !== "✓") && (
-                <div className="text-white font-bold text-[10px] md:text-base leading-tight">{tr.annotations[i].value}</div>
+              {tr.annotations[i].value !== "✓" && (
+                <div className="text-white font-bold text-[10px] md:text-lg leading-tight">{tr.annotations[i].value}</div>
               )}
-              <div className="text-white/80 text-[8px] md:text-[9px] font-semibold md:font-normal md:text-white/60 mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
+              <div className="text-white/80 text-[8px] md:text-[10px] font-semibold md:font-normal md:text-white/60 mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
             </div>
           </motion.div>
         ))}
@@ -626,18 +626,18 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                     visibleFaces.includes(i) ? (
                       <motion.div
                         key={`gallery-${f.name}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
-                        className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-xl px-2 py-1.5 flex items-center gap-2 cursor-pointer hover:bg-black/70 transition-all"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-xl px-3 py-2 flex items-center gap-2.5 cursor-pointer hover:bg-black/70 transition-all"
                         onClick={() => setActiveGallery(activeGallery === i ? null : i)}
                       >
-                        <div className="w-7 h-7 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
+                        <div className="w-9 h-9 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]" style={{ borderColor: f.color }}>
                           <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="text-white font-semibold text-[10px] leading-tight truncate">{f.name}</div>
-                          <div className="text-white/50 text-[8px] truncate">{tr.roles[i]} · {f.photos} photos</div>
+                          <div className="text-white font-semibold text-xs leading-tight truncate">{f.name}</div>
+                          <div className="text-white/50 text-[9px] truncate">{tr.roles[i]} · {f.photos} photos</div>
                         </div>
                       </motion.div>
                     ) : <div key={`gallery-empty-${i}`} />
