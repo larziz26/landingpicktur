@@ -82,7 +82,7 @@ const QUALITY_ANNOTATIONS = [
     detail: "Élément clé identifié",
     color: "#10B981",
     bg: "from-emerald-500/90 to-teal-600/90",
-    points: 23,
+    points: 5,
     delay: 5.64,
   },
 ];
@@ -377,7 +377,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             className="absolute"
             style={{
               left: `${a.badge.x}%`,
-              top: `${isMobile && i === 4 ? 43 : isMobile && i === 3 ? 20 : a.badge.y}%`,
+              top: `${isMobile && i === 4 ? 62 : isMobile && i === 3 ? 20 : a.badge.y}%`,
             }}
             initial={{ opacity: 0, x: i < 2 ? -18 : 18, scale: 0.85 }}
             animate={visibleAnnotations.includes(i) ? { opacity: 1, x: 0, scale: 1 } : {}}
@@ -392,7 +392,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 <div className="text-white font-bold text-[10px] md:text-lg leading-tight">{tr.annotations[i].value}</div>
               )}
               <div className="text-white/80 text-[8px] md:text-sm font-bold md:text-white mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
-              <div className="text-white/60 text-[7px] md:text-[11px] font-semibold mt-0.5 hidden md:block">+{a.points} pts</div>
+              <div className="text-white/90 text-[7px] md:text-xs font-bold mt-0.5 hidden md:block tracking-wide">+{a.points} pts</div>
             </div>
           </motion.div>
         ))}
@@ -440,16 +440,16 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             exit={{ opacity: 0, scale: 1.05 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="bg-black/70 backdrop-blur-xl border border-violet-400/30 rounded-2xl px-4 py-3 md:px-8 md:py-5 text-center shadow-2xl">
-              <div className="flex items-center gap-2 justify-center mb-1">
+            <div className="bg-black/70 backdrop-blur-xl border border-violet-400/30 rounded-xl md:rounded-2xl px-2.5 py-1.5 md:px-8 md:py-5 text-center shadow-2xl">
+              <div className="flex items-center gap-1.5 md:gap-2 justify-center md:mb-1">
                 <motion.div
-                  className="w-2 h-2 rounded-full bg-violet-400"
+                  className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-violet-400 flex-shrink-0"
                   animate={{ opacity: [1, 0.2, 1] }}
                   transition={{ duration: 0.8, repeat: Infinity }}
                 />
-                <span className="text-violet-300 text-xs md:text-sm font-semibold">{tr.transitionTitle}</span>
+                <span className="text-violet-300 text-[9px] md:text-sm font-semibold">{tr.transitionTitle}</span>
               </div>
-              <p className="text-white/50 text-[10px] md:text-xs">{tr.transitionSub}</p>
+              <p className="text-white/50 text-[8px] md:text-xs hidden md:block">{tr.transitionSub}</p>
             </div>
           </motion.div>
         )}
@@ -694,10 +694,10 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
               exit={{ opacity: 0, y: -8 }}
             >
               <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
-                {tr.titleFaces}<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-violet-300">
-                  {tr.titleFacesAccentA}<br />{tr.titleFacesAccentB}
-                </span>
+                {tr.titleFaces}{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-violet-300">{tr.titleFacesAccentA}</span>
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-violet-300">{tr.titleFacesAccentB}</span>
               </h2>
               <p className="text-white/50 text-[10px] sm:text-sm md:text-base mt-1 md:mt-2">
                 {tr.titleFacesSub}
