@@ -377,7 +377,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             className="absolute"
             style={{
               left: `${a.badge.x}%`,
-              top: `${isMobile && i === 4 ? 62 : isMobile && i === 3 ? 20 : a.badge.y}%`,
+              top: `${isMobile && i === 4 ? 43 : isMobile && i === 3 ? 20 : isMobile && i === 1 ? 36 : a.badge.y}%`,
             }}
             initial={{ opacity: 0, x: i < 2 ? -18 : 18, scale: 0.85 }}
             animate={visibleAnnotations.includes(i) ? { opacity: 1, x: 0, scale: 1 } : {}}
@@ -392,7 +392,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 <div className="text-white font-bold text-[10px] md:text-lg leading-tight">{tr.annotations[i].value}</div>
               )}
               <div className="text-white/80 text-[8px] md:text-sm font-bold md:text-white mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
-              <div className="text-white/90 text-[7px] md:text-xs font-bold mt-0.5 hidden md:block tracking-wide">+{a.points} pts</div>
+              <div className="text-white/90 text-[7px] md:text-xs font-bold mt-0.5 tracking-wide">+{a.points} pts</div>
             </div>
           </motion.div>
         ))}
