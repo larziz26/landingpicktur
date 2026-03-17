@@ -549,8 +549,8 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
               </div>
               {!f.labelBelow && !isMobile && <div className="w-px h-2 mx-auto" style={{ background: f.color }} />}
             </motion.div>
-          ) : null
-        )}
+          ) : null;
+        })}
       </AnimatePresence>
 
       {/* ── PHASE 2 — gallery cards in safe zone [50,800,400,1130] on 1920×1080 ── */}
