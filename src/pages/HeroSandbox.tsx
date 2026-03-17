@@ -291,12 +291,12 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/45" />
 
-      {/* ── PHASE 1 SVG — quality annotation lines (desktop only) ── */}
+      {/* ── PHASE 1 SVG — quality annotation lines ── */}
       <AnimatePresence>
         {showQuality && (
           <motion.svg
             key="quality-svg"
-            className="absolute inset-0 w-full h-full pointer-events-none hidden md:block"
+            className="absolute inset-0 w-full h-full pointer-events-none"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
             initial={{ opacity: 1 }}
@@ -358,12 +358,12 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
         ))}
       </AnimatePresence>
 
-      {/* ── PHASE 1 — glassmorphism badges (desktop only) ── */}
+      {/* ── PHASE 1 — glassmorphism badges ── */}
       <AnimatePresence>
         {showQuality && QUALITY_ANNOTATIONS.map((a, i) => (
           <motion.div
             key={`badge-${i}`}
-            className="absolute hidden md:block"
+            className="absolute"
             style={{ left: `${a.badge.x}%`, top: `${a.badge.y}%` }}
             initial={{ opacity: 0, x: i < 2 ? -18 : 18, scale: 0.85 }}
             animate={visibleAnnotations.includes(i) ? { opacity: 1, x: 0, scale: 1 } : {}}
@@ -371,12 +371,12 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
           >
             <div
-              className="rounded-2xl px-3.5 py-2.5 shadow-2xl border border-white/20 backdrop-blur-md min-w-[138px]"
+              className="rounded-xl md:rounded-2xl px-2 py-1 md:px-3.5 md:py-2.5 shadow-2xl border border-white/20 backdrop-blur-md min-w-[72px] md:min-w-[138px]"
               style={{ background: `linear-gradient(135deg, ${a.color}cc, ${a.color}88)` }}
             >
-              <div className="text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5">{tr.annotations[i].label}</div>
-              <div className="text-white font-bold text-base leading-tight">{tr.annotations[i].value}</div>
-              <div className="text-white/60 text-[10px] mt-0.5">{tr.annotations[i].detail}</div>
+              <div className="text-[7px] md:text-[9px] text-white/70 uppercase tracking-widest font-semibold mb-0.5 hidden md:block">{tr.annotations[i].label}</div>
+              <div className="text-white font-bold text-[10px] md:text-base leading-tight">{tr.annotations[i].value}</div>
+              <div className="text-white/80 text-[8px] md:text-[9px] font-semibold md:font-normal md:text-white/60 mt-0 md:mt-0.5 truncate max-w-[68px] md:max-w-none">{tr.annotations[i].label}</div>
             </div>
           </motion.div>
         ))}
@@ -533,7 +533,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
       <AnimatePresence>
         {showFaces && (
           <motion.div
-            className="absolute flex-col gap-1.5 z-10 hidden md:flex"
+            className="absolute flex flex-col gap-1 md:gap-1.5 z-10"
             style={{ left: "41.7%", top: "4.6%", width: "17.2%" }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -541,7 +541,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
             transition={{ duration: 0.5 }}
           >
             {/* Counter badge */}
-            <div className="bg-black/55 backdrop-blur-xl border border-emerald-400/30 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5">
+            <div className="bg-black/55 backdrop-blur-xl border border-emerald-400/30 rounded-lg px-1.5 py-1 md:px-2.5 md:py-1.5 flex items-center gap-1 md:gap-1.5">
               <motion.div
                 className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
                 animate={{ opacity: [1, 0.2, 1] }}
@@ -559,19 +559,19 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: f.delay * 0.5 + 0.4, type: "spring", stiffness: 280, damping: 22 }}
-                  className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-xl px-2 py-1.5 flex items-center gap-2 cursor-pointer hover:bg-black/70 transition-all"
+                  className="bg-black/55 backdrop-blur-xl border border-white/15 rounded-lg md:rounded-xl px-1.5 py-1 md:px-2 md:py-1.5 flex items-center gap-1 md:gap-2 cursor-pointer hover:bg-black/70 transition-all"
                   onClick={() => setActiveGallery(activeGallery === i ? null : i)}
                 >
                   {/* Face photo avatar */}
                   <div
-                    className="w-7 h-7 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]"
+                    className="w-5 h-5 md:w-7 md:h-7 rounded-full flex-shrink-0 shadow-lg overflow-hidden border-[1.5px]"
                     style={{ borderColor: f.color }}
                   >
                     <img src={f.photo} alt={f.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-white font-semibold text-[10px] leading-tight truncate">{f.name}</div>
-                    <div className="text-white/50 text-[8px] truncate">{tr.roles[i]} · {f.photos} photos</div>
+                    <div className="text-white font-semibold text-[8px] md:text-[10px] leading-tight truncate">{f.name}</div>
+                    <div className="text-white/50 text-[7px] md:text-[8px] truncate hidden md:block">{tr.roles[i]} · {f.photos} photos</div>
                   </div>
                 </motion.div>
               ) : null
@@ -583,13 +583,13 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-xl px-2 py-1.5"
+                className="bg-gradient-to-r from-violet-600/80 to-pink-600/80 backdrop-blur-xl border border-white/20 rounded-lg md:rounded-xl px-1.5 py-1 md:px-2 md:py-1.5"
               >
                 <div className="flex items-center gap-1.5">
-                  <ScanFace className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                  <ScanFace className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-white flex-shrink-0" />
                   <div>
-                    <div className="text-white font-bold text-[9px]">{tr.selfieAccess}</div>
-                    <div className="text-white/60 text-[8px]">{tr.selfieGallery}</div>
+                    <div className="text-white font-bold text-[8px] md:text-[9px]">{tr.selfieAccess}</div>
+                    <div className="text-white/60 text-[7px] md:text-[8px] hidden md:block">{tr.selfieGallery}</div>
                   </div>
                 </div>
               </motion.div>
