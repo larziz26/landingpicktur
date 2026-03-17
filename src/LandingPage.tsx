@@ -770,35 +770,39 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── Hero — animation en pleine largeur, puis CTA en dessous ── */}
-      <section className="relative overflow-hidden pt-16">
-        {/* Animation hero banner */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="relative max-w-6xl mx-auto px-4"
-        >
-          <Concept1Fusion />
-        </motion.div>
+      {/* ── Hero — titre + CTA + animation ── */}
+      <section className="relative overflow-hidden pt-20 pb-4">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-radial from-amber-100/60 via-rose-50/30 to-transparent rounded-full blur-3xl" />
+        </div>
 
-        {/* Sous-titre + CTA sous l'animation */}
-        <div className="relative max-w-4xl mx-auto text-center px-6 mt-10 pb-12">
+        {/* Titre + CTA */}
+        <div className="relative max-w-4xl mx-auto text-center px-6 mb-10">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-full px-4 py-1.5 text-xs text-stone-500 mb-6 shadow-sm">
-              <Zap className="w-3.5 h-3.5 text-amber-500" />
-              Tri IA · Galeries premium · Reconnaissance faciale · Albums physiques
+            <div className="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-full px-4 py-1.5 text-xs text-stone-500 mb-7 shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              {tr.hero.badge}
             </div>
 
-            <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto mb-8 leading-relaxed">
-              {tr.hero.sub}
+            <h1 className="text-5xl md:text-6xl font-bold text-stone-900 leading-[1.08] tracking-tight mb-4">
+              La plateforme tout-en-un pour{" "}
+              <span className="relative inline-block">
+                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-violet-500">
+                  photographes de mariage.
+                </span>
+                <span className="absolute inset-x-0 bottom-1 h-3 bg-gradient-to-r from-rose-200/60 to-violet-200/60 -z-10 blur-sm rounded" />
+              </span>
+            </h1>
+
+            <p className="text-lg text-stone-500 max-w-2xl mx-auto mb-8 leading-relaxed">
+              Triez avec l'IA, livrez des galeries premium et offrez à chaque invité ses photos — en quelques minutes.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
               <a href={APP_URL}>
                 <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-7 py-3.5 rounded-xl hover:bg-stone-800 transition-all font-medium text-base shadow-md hover:shadow-lg">
                   {tr.hero.cta1}
@@ -825,6 +829,16 @@ export default function LandingPage() {
             </p>
           </motion.div>
         </div>
+
+        {/* Animation hero banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.7 }}
+          className="relative max-w-6xl mx-auto px-4 pb-12"
+        >
+          <Concept1Fusion />
+        </motion.div>
       </section>
 
       {/* ── Stats band ── */}
