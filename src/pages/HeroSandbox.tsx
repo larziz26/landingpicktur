@@ -259,7 +259,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
     t(() => {
       setPhase("faces");
       FACE_DETECTIONS.forEach((f, i) => {
-        t(() => setVisibleFaces((prev) => [...prev, i]), f.delay * 1000);
+        t(() => setVisibleFaces((prev) => [...prev, i]), f.delay * 1100);
       });
     }, facesAt);
 
@@ -392,6 +392,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
                 <div className="text-white font-bold text-[10px] md:text-lg leading-tight">{tr.annotations[i].value}</div>
               )}
               <div className="text-white/80 text-[8px] md:text-sm font-bold md:text-white mt-0 md:mt-0.5 md:max-w-none whitespace-normal break-words max-w-[80px]">{tr.annotations[i].label}</div>
+              <div className="text-white/60 text-[7px] md:text-[11px] font-semibold mt-0.5 hidden md:block">+{a.points} pts</div>
             </div>
           </motion.div>
         ))}
@@ -433,7 +434,7 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
       <AnimatePresence>
         {phase === "transition" && (
           <motion.div
-            className="absolute inset-x-0 top-[30%] -translate-y-1/2 flex justify-center z-20"
+            className="absolute inset-x-0 top-[42%] -translate-y-1/2 flex justify-center z-20"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
