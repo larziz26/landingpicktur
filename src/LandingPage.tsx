@@ -403,7 +403,8 @@ function ReferralWidget({ labels }: { labels: { placeholder: string; btn: string
     if (!name.trim()) return;
     setState("loading");
     try {
-      const res = await fetch("/api/referrals", {
+      const apiBase = (import.meta.env.VITE_API_URL as string) || "";
+      const res = await fetch(`${apiBase}/api/referrals`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim() }),
