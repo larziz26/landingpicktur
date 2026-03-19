@@ -100,6 +100,20 @@ const copy = {
       ],
       cta: "Essayer Picktur gratuitement",
     },
+    testimonials: {
+      badge: "Ils en parlent",
+      h2: "Des centaines de photographes. Une seule plateforme.",
+      items: [
+        { name: "Mathilde C.", role: "Photographe de mariage · Lyon", text: "J'ai livré ma première galerie en moins de 24h après le mariage. Mes clients n'en revenaient pas.", avatar: "M", color: "#E879A0" },
+        { name: "Lucas B.", role: "Photographe · Paris", text: "Le tri IA m'a économisé 4h sur mon dernier mariage. Je n'imagine plus travailler sans.", avatar: "L", color: "#6366F1" },
+        { name: "Camille R.", role: "Studio photo · Bordeaux", text: "Mes clients adorent retrouver leurs photos en selfie. C'est devenu mon argument de vente numéro 1.", avatar: "C", color: "#10B981" },
+        { name: "Antoine D.", role: "Photographe indépendant · Nantes", text: "Picktur m'a permis de passer de 3 jours à 6h de travail post-production. Bluffant.", avatar: "A", color: "#F59E0B" },
+        { name: "Sophie L.", role: "Photographe · Marseille", text: "L'interface est tellement claire. Même mes clients les moins technophiles s'en sortent parfaitement.", avatar: "S", color: "#8B5CF6" },
+        { name: "Julien M.", role: "Photographe de mariage · Lille", text: "Le scoring IA est redoutablement précis. Je valide les sélections sans presque y toucher.", avatar: "J", color: "#06B6D4" },
+        { name: "Eléonore T.", role: "Photographe · Strasbourg", text: "Mes mariées reçoivent leur galerie le lendemain. La reconnaissance faciale les sidère à chaque fois.", avatar: "E", color: "#EC4899" },
+        { name: "Pierre G.", role: "Studio · Toulouse", text: "J'ai migré depuis Pixieset. À fonctionnalités équivalentes, Picktur est bien moins cher — et en plus, y'a l'IA.", avatar: "P", color: "#84CC16" },
+      ],
+    },
     albumSection: {
       badge: "Album physique",
       h2: "Du numérique à l'album. En quelques clics.",
@@ -288,6 +302,20 @@ const copy = {
         { feature: "Starting price", picktur: "€19/mo", pixieset: "~€25/mo", wetransfer: "Free limited" },
       ],
       cta: "Try Picktur for free",
+    },
+    testimonials: {
+      badge: "What they say",
+      h2: "Hundreds of photographers. One platform.",
+      items: [
+        { name: "Mathilde C.", role: "Wedding photographer · Lyon", text: "I delivered my first gallery less than 24h after the wedding. My clients couldn't believe it.", avatar: "M", color: "#E879A0" },
+        { name: "Lucas B.", role: "Photographer · Paris", text: "AI culling saved me 4 hours on my last wedding. I can't imagine working without it anymore.", avatar: "L", color: "#6366F1" },
+        { name: "Camille R.", role: "Photo studio · Bordeaux", text: "My clients love finding their photos with a selfie. It's become my #1 sales argument.", avatar: "C", color: "#10B981" },
+        { name: "Antoine D.", role: "Freelance photographer · Nantes", text: "Picktur took me from 3 days to 6 hours of post-production work. Mind-blowing.", avatar: "A", color: "#F59E0B" },
+        { name: "Sophie L.", role: "Photographer · Marseille", text: "The interface is so clear. Even my least tech-savvy clients navigate it perfectly.", avatar: "S", color: "#8B5CF6" },
+        { name: "Julien M.", role: "Wedding photographer · Lille", text: "The AI scoring is incredibly accurate. I approve selections with almost no changes.", avatar: "J", color: "#06B6D4" },
+        { name: "Eléonore T.", role: "Photographer · Strasbourg", text: "My brides get their gallery the next day. The face recognition amazes them every time.", avatar: "E", color: "#EC4899" },
+        { name: "Pierre G.", role: "Studio · Toulouse", text: "I migrated from Pixieset. Same features, cheaper — and on top of that, there's AI.", avatar: "P", color: "#84CC16" },
+      ],
     },
     albumSection: {
       badge: "Physical album",
@@ -809,6 +837,68 @@ function GalleryMock() {
   );
 }
 
+// ─── Testimonials Double Marquee ──────────────────────────────────────────────
+type TestimonialItem = { name: string; role: string; text: string; avatar: string; color: string };
+
+function MarqueeRow({ items, reverse = false }: { items: TestimonialItem[]; reverse?: boolean }) {
+  const doubled = [...items, ...items];
+  return (
+    <div className="overflow-hidden">
+      <motion.div
+        className="flex gap-4 w-max"
+        animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
+        transition={{ repeat: Infinity, duration: 35, ease: "linear" }}
+      >
+        {doubled.map((t, i) => (
+          <div
+            key={i}
+            className="flex-shrink-0 w-80 bg-white border border-stone-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                style={{ background: t.color }}
+              >
+                {t.avatar}
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-stone-900">{t.name}</div>
+                <div className="text-xs text-stone-400">{t.role}</div>
+              </div>
+              <div className="ml-auto flex gap-0.5">
+                {[...Array(5)].map((_, j) => (
+                  <Star key={j} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-stone-600 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+function TestimonialsMarquee({ data }: { data: { badge: string; h2: string; items: TestimonialItem[] } }) {
+  const row1 = data.items.slice(0, 4);
+  const row2 = data.items.slice(4, 8);
+  return (
+    <section className="py-24 border-t border-stone-100 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6 text-center mb-12">
+        <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-full px-3 py-1 text-xs text-amber-600 mb-5">
+          <Heart className="w-3.5 h-3.5" />
+          {data.badge}
+        </div>
+        <h2 className="text-3xl md:text-4xl font-bold text-stone-900">{data.h2}</h2>
+      </div>
+      <div className="space-y-4">
+        <MarqueeRow items={row1} reverse={false} />
+        <MarqueeRow items={row2} reverse={true} />
+      </div>
+    </section>
+  );
+}
+
 // ─── Main Landing Page ────────────────────────────────────────────────────────
 // CTA URL — change this to your app signup URL
 const APP_URL = "https://app.picktur.fr/auth";
@@ -1146,6 +1236,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Testimonials ── */}
+      <TestimonialsMarquee data={tr.testimonials} />
 
       {/* ── Couples / Affiliation ── */}
       <section className="py-24 px-6 border-t border-stone-100 bg-white">
