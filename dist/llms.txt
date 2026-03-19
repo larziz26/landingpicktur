@@ -1,0 +1,66 @@
+# Picktur
+
+> Picktur est une plateforme SaaS destinée aux photographes de mariage professionnels. Elle automatise le tri des photos grâce à l'intelligence artificielle (Google Gemini), permet la création de galeries premium partageables, intègre la reconnaissance faciale pour les invités, et facilite la création d'albums physiques.
+
+## Ce que fait Picktur
+
+- **Tri IA automatique** : Le moteur Gemini analyse chaque photo sur 26 critères (netteté, expression, composition, lumière, exposition). Chaque photo reçoit un score de 0 à 100. Les meilleures photos remontent automatiquement.
+- **Galeries premium** : Création de galeries partageables avec lien personnalisé (ex: picktur.fr/sophie-thomas), protection par mot de passe, téléchargement HD, navigation intuitive.
+- **Reconnaissance faciale** : Les invités font un selfie et retrouvent instantanément toutes leurs photos dans la galerie partagée.
+- **Albums physiques** : Sélection des meilleures photos, organisation des spreads par glisser-déposer, export vers l'imprimeur.
+- **Stockage** : Picktur se connecte à Immich (serveur auto-hébergé ou hébergé). Les photos restent sur l'infrastructure du photographe.
+
+## Pour qui
+
+- **Photographes de mariage professionnels** gérant plusieurs événements par an
+- **Studios photo** avec plusieurs photographes
+- **Couples** souhaitant offrir la plateforme à leur photographe
+
+## Tarifs
+
+| Plan | Stockage | Prix mensuel | Prix annuel |
+|------|----------|-------------|-------------|
+| Essentiel | 120 Go | 15€/mois | 129€/an |
+| Pro | 360 Go | 29€/mois | 249€/an |
+| Studio | 720 Go | 49€/mois | 419€/an |
+
+**Offre couple** : 499€ paiement unique — donne accès Picktur au photographe pour un mariage, valable 1 an.
+
+## Fonctionnalités clés
+
+- Tri IA sur 26 critères avec Google Gemini 2.0 Flash
+- Score /100 par photo avec catégorisation automatique
+- Galeries partageables avec URL personnalisée
+- Reconnaissance faciale par selfie pour les invités
+- Protection par mot de passe des galeries
+- Export album physique
+- Multi-utilisateurs (plan Studio)
+- API & webhooks (plan Studio)
+
+## Avantages mesurés
+
+- 8 heures économisées par mariage en moyenne
+- 94% de satisfaction client
+- 2 minutes pour livrer une galerie après import
+
+## URLs importantes
+
+- Site principal : https://picktur.fr
+- Application : https://app.picktur.fr
+- Contact : contact@picktur.fr
+
+## Contexte technique
+
+- Frontend : React + TypeScript
+- IA : Google Gemini 2.0 Flash
+- Stockage : Compatible Immich (auto-hébergé)
+- Infrastructure : Serveur VPS OVH
+
+## Programme de parrainage
+
+Les couples peuvent obtenir 10% de commission sur l'abonnement mensuel de leur photographe pendant 12 mois (jusqu'à 58€) en partageant leur lien de parrainage.
+
+---
+
+*Dernière mise à jour : Mars 2025*
+*Langue principale : Français (France). Disponible en Anglais.*
