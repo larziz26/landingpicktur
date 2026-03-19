@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   Camera, Zap, Star, ArrowRight, Check, ChevronDown,
   Globe, Play, ScanFace, BookOpen, Sparkles, Award, Heart,
-  TrendingUp, Gift
+  TrendingUp, Gift, ChevronLeft, ChevronRight, Quote
 } from "lucide-react";
 import { Concept1Fusion } from "./pages/HeroSandbox";
 
@@ -125,7 +125,7 @@ const copy = {
       aiNote: "Option non désactivable après souscription",
       plans: [
         {
-          name: "Essentiel", storage: "120 Go",
+          name: "Essentiel", slug: "starter", storage: "120 Go",
           price: { m: "19€", y: "209€" }, priceAi: { m: "25€", y: "275€" }, period: { m: "/ mois", y: "/ an" },
           badge: null, highlight: false,
           desc: "Pour démarrer sereinement.",
@@ -133,7 +133,7 @@ const copy = {
           cta: "Démarrer",
         },
         {
-          name: "Pro", storage: "360 Go",
+          name: "Pro", slug: "pro", storage: "360 Go",
           price: { m: "35€", y: "385€" }, priceAi: { m: "46€", y: "506€" }, period: { m: "/ mois", y: "/ an" },
           badge: "Le plus populaire", highlight: true,
           desc: "Le choix des photographes actifs.",
@@ -141,7 +141,7 @@ const copy = {
           cta: "Commencer Pro",
         },
         {
-          name: "Studio", storage: "720 Go",
+          name: "Studio", slug: "studio", storage: "720 Go",
           price: { m: "59€", y: "649€" }, priceAi: { m: "77€", y: "847€" }, period: { m: "/ mois", y: "/ an" },
           badge: null, highlight: false,
           desc: "Pour les photographes intensifs.",
@@ -177,6 +177,27 @@ const copy = {
           note: "Gratuit · Sans compte · Valable immédiatement",
         },
       },
+    },
+    testimonials: {
+      badge: "Ils en parlent mieux que nous",
+      h2: "Ce que disent nos utilisateurs",
+      items: [
+        {
+          initials: "A.M.", name: "Antoine M.", role: "Photographe de mariage", location: "Lyon", color: "#6366F1",
+          quote: "J'ai livré la galerie de Sarah et Thomas le lendemain du mariage à 10h du matin. Mes clients n'en revenaient pas. Avant Picktur, j'avais besoin d'une semaine entière pour trier 4 000 photos — maintenant l'IA le fait pendant que je dors.",
+          detail: "4 200 photos · Mariage à Lyon · Livré en 18h",
+        },
+        {
+          initials: "J.P.", name: "Jennifer P.", role: "Mariée", location: "Paris", color: "#E879A0",
+          quote: "Ça fait un an que je me suis mariée et je n'avais toujours pas ouvert le WeTransfer de mon photographe — pourtant j'avais déjà payé pour des albums physiques. Picktur m'a permis de voir mes photos d'une façon innovante, de les partager à mes invités, et enfin de constituer mon album.",
+          detail: "Mariée · Paris · Mars 2025",
+        },
+        {
+          initials: "M.L.", name: "Marc L.", role: "Invité", location: "Bordeaux", color: "#10B981",
+          quote: "Je ne m'attendais vraiment pas à retrouver mes photos aussi facilement. Un selfie depuis mon téléphone, et j'avais accès à toutes les photos où j'apparais — en HD. J'en ai retrouvé que je n'aurais jamais pensé voir.",
+          detail: "Invité · Mariage en Gironde",
+        },
+      ],
     },
     faq: {
       h2: "Questions fréquentes",
@@ -314,7 +335,7 @@ const copy = {
       aiNote: "Cannot be deactivated after subscribing",
       plans: [
         {
-          name: "Essential", storage: "120 GB",
+          name: "Essential", slug: "starter", storage: "120 GB",
           price: { m: "€19", y: "€209" }, priceAi: { m: "€25", y: "€275" }, period: { m: "/ month", y: "/ year" },
           badge: null, highlight: false,
           desc: "Start without breaking the bank.",
@@ -322,7 +343,7 @@ const copy = {
           cta: "Get started",
         },
         {
-          name: "Pro", storage: "360 GB",
+          name: "Pro", slug: "pro", storage: "360 GB",
           price: { m: "€35", y: "€385" }, priceAi: { m: "€46", y: "€506" }, period: { m: "/ month", y: "/ year" },
           badge: "Most popular", highlight: true,
           desc: "The choice of active photographers.",
@@ -330,7 +351,7 @@ const copy = {
           cta: "Start Pro",
         },
         {
-          name: "Studio", storage: "720 GB",
+          name: "Studio", slug: "studio", storage: "720 GB",
           price: { m: "€59", y: "€649" }, priceAi: { m: "€77", y: "€847" }, period: { m: "/ month", y: "/ year" },
           badge: null, highlight: false,
           desc: "For high-volume photographers.",
@@ -366,6 +387,27 @@ const copy = {
           note: "Free · No account needed · Works immediately",
         },
       },
+    },
+    testimonials: {
+      badge: "They say it better than us",
+      h2: "What our users say",
+      items: [
+        {
+          initials: "A.M.", name: "Antoine M.", role: "Wedding photographer", location: "Lyon", color: "#6366F1",
+          quote: "I delivered Sarah and Thomas's gallery the morning after the wedding at 10am. My clients couldn't believe it. Before Picktur, I needed a full week to cull 4,000 photos — now AI does it while I sleep.",
+          detail: "4,200 photos · Wedding in Lyon · Delivered in 18h",
+        },
+        {
+          initials: "J.P.", name: "Jennifer P.", role: "Bride", location: "Paris", color: "#E879A0",
+          quote: "It had been a year since my wedding and I still hadn't opened my photographer's WeTransfer — even though I'd already paid for physical albums. Picktur let me see my photos in an innovative way, share them with my guests, and finally build my album.",
+          detail: "Bride · Paris · March 2025",
+        },
+        {
+          initials: "M.L.", name: "Marc L.", role: "Guest", location: "Bordeaux", color: "#10B981",
+          quote: "I really didn't expect to find my photos so easily. One selfie from my phone and I had access to every photo I appeared in — in HD. I found some I never would have thought I'd see.",
+          detail: "Guest · Wedding in Gironde",
+        },
+      ],
     },
     faq: {
       h2: "Frequently asked questions",
@@ -809,9 +851,113 @@ function GalleryMock() {
   );
 }
 
+// ─── Testimonials Carousel ────────────────────────────────────────────────────
+const TESTIMONIAL_DELAY = 3000;
+
+type TestimonialItem = { initials: string; name: string; role: string; location: string; color: string; quote: string; detail: string };
+
+function TestimonialsCarousel({ items, badge, h2 }: { items: TestimonialItem[]; badge: string; h2: string }) {
+  const [active, setActive] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const t = items[active];
+
+  const goTo = (i: number) => { setActive(i); setProgress(0); };
+
+  useEffect(() => {
+    const id = setInterval(() => { setActive((a) => (a + 1) % items.length); setProgress(0); }, TESTIMONIAL_DELAY);
+    return () => clearInterval(id);
+  }, [active]);
+
+  useEffect(() => {
+    setProgress(0);
+    const step = 100 / (TESTIMONIAL_DELAY / 50);
+    const id = setInterval(() => setProgress((p) => Math.min(p + step, 100)), 50);
+    return () => clearInterval(id);
+  }, [active]);
+
+  return (
+    <section className="py-24 px-6 border-t border-stone-100 bg-white">
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-full px-3 py-1 text-xs text-amber-600 mb-5">
+            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+            {badge}
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-stone-900">{h2}</h2>
+        </div>
+
+        <div>
+          {/* Tabs */}
+          <div className="flex justify-center gap-3 mb-8 flex-wrap">
+            {items.map((item, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                  active === i ? "bg-stone-900 text-white shadow-md" : "bg-stone-50 border border-stone-200 text-stone-500 hover:border-stone-300"
+                }`}
+              >
+                <span className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0" style={{ background: item.color }}>
+                  {item.initials.split(".")[0]}
+                </span>
+                {item.role}
+              </button>
+            ))}
+          </div>
+
+          {/* Card */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.22 }}
+              className="bg-white border border-stone-200 rounded-2xl p-8 md:p-10 shadow-sm overflow-hidden relative"
+            >
+              <div className="absolute bottom-0 left-0 h-0.5 bg-stone-100 w-full">
+                <div className="h-full bg-stone-400 transition-none" style={{ width: `${progress}%` }} />
+              </div>
+              <Quote className="w-8 h-8 text-stone-100 mb-4" />
+              <p className="text-stone-700 text-lg md:text-xl leading-relaxed mb-8 font-light">"{t.quote}"</p>
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-sm flex-shrink-0" style={{ background: t.color }}>
+                    {t.initials}
+                  </div>
+                  <div>
+                    <div className="font-bold text-stone-900">{t.name}</div>
+                    <div className="text-sm text-stone-400">{t.role} · {t.location}</div>
+                  </div>
+                </div>
+                <div className="text-xs text-stone-300 border border-stone-100 rounded-full px-3 py-1.5 hidden md:block">{t.detail}</div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Dots + arrows */}
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <button onClick={() => goTo((active - 1 + items.length) % items.length)} className="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center hover:border-stone-400 transition-all bg-white">
+              <ChevronLeft className="w-4 h-4 text-stone-600" />
+            </button>
+            <div className="flex items-center gap-2">
+              {items.map((_, i) => (
+                <button key={i} onClick={() => goTo(i)} className={`rounded-full transition-all ${active === i ? "w-6 h-2 bg-stone-900" : "w-2 h-2 bg-stone-200 hover:bg-stone-300"}`} />
+              ))}
+            </div>
+            <button onClick={() => goTo((active + 1) % items.length)} className="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center hover:border-stone-400 transition-all bg-white">
+              <ChevronRight className="w-4 h-4 text-stone-600" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Main Landing Page ────────────────────────────────────────────────────────
-// CTA URL — change this to your app signup URL
-const APP_URL = "https://app.picktur.fr/auth";
+const APP_URL = "https://picktur.com/auth";
+const CHECKOUT_URL = "https://picktur.com/api/subscribe/checkout";
 
 export default function LandingPage() {
   const [lang, setLang] = useState<Lang>("fr");
@@ -820,7 +966,7 @@ export default function LandingPage() {
   const tr = copy[lang];
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-stone-900 antialiased" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-[#FAFAF8] text-stone-900 antialiased" style={{ fontFamily: "'Open Sauce Sans', system-ui, sans-serif" }}>
 
       {/* ── Navbar ── */}
       <nav className="sticky top-0 z-50 bg-[#FAFAF8]/90 backdrop-blur-md border-b border-stone-100">
@@ -1182,6 +1328,9 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Testimonials ── */}
+      <TestimonialsCarousel items={tr.testimonials.items} badge={tr.testimonials.badge} h2={tr.testimonials.h2} />
+
       {/* ── Pricing ── */}
       <section id="pricing" className="py-24 px-6 border-t border-stone-100">
         <div className="max-w-5xl mx-auto">
@@ -1256,7 +1405,7 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <a href={APP_URL}>
+                <a href={`${CHECKOUT_URL}?plan=${(plan as any).slug}`}>
                   <button className={`w-full py-2.5 rounded-xl font-medium text-sm transition-all ${plan.highlight ? "bg-white text-stone-900 hover:bg-stone-100" : "bg-stone-900 text-white hover:bg-stone-800"}`}>
                     {plan.cta}
                   </button>
