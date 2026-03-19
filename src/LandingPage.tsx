@@ -100,6 +100,20 @@ const copy = {
       ],
       cta: "Essayer Picktur gratuitement",
     },
+    testimonials: {
+      badge: "Ils en parlent",
+      h2: "Des centaines de photographes. Une seule plateforme.",
+      items: [
+        { name: "Mathilde C.", role: "Photographe de mariage · Lyon", text: "J'ai livré ma première galerie en moins de 24h après le mariage. Mes clients n'en revenaient pas.", avatar: "M", color: "#E879A0" },
+        { name: "Lucas B.", role: "Photographe · Paris", text: "Le tri IA m'a économisé 4h sur mon dernier mariage. Je n'imagine plus travailler sans.", avatar: "L", color: "#6366F1" },
+        { name: "Camille R.", role: "Studio photo · Bordeaux", text: "Mes clients adorent retrouver leurs photos en selfie. C'est devenu mon argument de vente numéro 1.", avatar: "C", color: "#10B981" },
+        { name: "Antoine D.", role: "Photographe indépendant · Nantes", text: "Picktur m'a permis de passer de 3 jours à 6h de travail post-production. Bluffant.", avatar: "A", color: "#F59E0B" },
+        { name: "Sophie L.", role: "Photographe · Marseille", text: "L'interface est tellement claire. Même mes clients les moins technophiles s'en sortent parfaitement.", avatar: "S", color: "#8B5CF6" },
+        { name: "Julien M.", role: "Photographe de mariage · Lille", text: "Le scoring IA est redoutablement précis. Je valide les sélections sans presque y toucher.", avatar: "J", color: "#06B6D4" },
+        { name: "Eléonore T.", role: "Photographe · Strasbourg", text: "Mes mariées reçoivent leur galerie le lendemain. La reconnaissance faciale les sidère à chaque fois.", avatar: "E", color: "#EC4899" },
+        { name: "Pierre G.", role: "Studio · Toulouse", text: "J'ai migré depuis Pixieset. À fonctionnalités équivalentes, Picktur est bien moins cher — et en plus, y'a l'IA.", avatar: "P", color: "#84CC16" },
+      ],
+    },
     albumSection: {
       badge: "Album physique",
       h2: "Du numérique à l'album. En quelques clics.",
@@ -177,27 +191,6 @@ const copy = {
           note: "Gratuit · Sans compte · Valable immédiatement",
         },
       },
-    },
-    testimonials: {
-      badge: "Ils en parlent mieux que nous",
-      h2: "Ce que disent nos utilisateurs",
-      items: [
-        {
-          initials: "A.M.", name: "Antoine M.", role: "Photographe de mariage", location: "Lyon", color: "#6366F1",
-          quote: "J'ai livré la galerie de Sarah et Thomas le lendemain du mariage à 10h du matin. Mes clients n'en revenaient pas. Avant Picktur, j'avais besoin d'une semaine entière pour trier 4 000 photos — maintenant l'IA le fait pendant que je dors.",
-          detail: "4 200 photos · Mariage à Lyon · Livré en 18h",
-        },
-        {
-          initials: "J.P.", name: "Jennifer P.", role: "Mariée", location: "Paris", color: "#E879A0",
-          quote: "Ça fait un an que je me suis mariée et je n'avais toujours pas ouvert le WeTransfer de mon photographe — pourtant j'avais déjà payé pour des albums physiques. Picktur m'a permis de voir mes photos d'une façon innovante, de les partager à mes invités, et enfin de constituer mon album.",
-          detail: "Mariée · Paris · Mars 2025",
-        },
-        {
-          initials: "M.L.", name: "Marc L.", role: "Invité", location: "Bordeaux", color: "#10B981",
-          quote: "Je ne m'attendais vraiment pas à retrouver mes photos aussi facilement. Un selfie depuis mon téléphone, et j'avais accès à toutes les photos où j'apparais — en HD. J'en ai retrouvé que je n'aurais jamais pensé voir.",
-          detail: "Invité · Mariage en Gironde",
-        },
-      ],
     },
     faq: {
       h2: "Questions fréquentes",
@@ -310,6 +303,20 @@ const copy = {
       ],
       cta: "Try Picktur for free",
     },
+    testimonials: {
+      badge: "What they say",
+      h2: "Hundreds of photographers. One platform.",
+      items: [
+        { name: "Mathilde C.", role: "Wedding photographer · Lyon", text: "I delivered my first gallery less than 24h after the wedding. My clients couldn't believe it.", avatar: "M", color: "#E879A0" },
+        { name: "Lucas B.", role: "Photographer · Paris", text: "AI culling saved me 4 hours on my last wedding. I can't imagine working without it anymore.", avatar: "L", color: "#6366F1" },
+        { name: "Camille R.", role: "Photo studio · Bordeaux", text: "My clients love finding their photos with a selfie. It's become my #1 sales argument.", avatar: "C", color: "#10B981" },
+        { name: "Antoine D.", role: "Freelance photographer · Nantes", text: "Picktur took me from 3 days to 6 hours of post-production work. Mind-blowing.", avatar: "A", color: "#F59E0B" },
+        { name: "Sophie L.", role: "Photographer · Marseille", text: "The interface is so clear. Even my least tech-savvy clients navigate it perfectly.", avatar: "S", color: "#8B5CF6" },
+        { name: "Julien M.", role: "Wedding photographer · Lille", text: "The AI scoring is incredibly accurate. I approve selections with almost no changes.", avatar: "J", color: "#06B6D4" },
+        { name: "Eléonore T.", role: "Photographer · Strasbourg", text: "My brides get their gallery the next day. The face recognition amazes them every time.", avatar: "E", color: "#EC4899" },
+        { name: "Pierre G.", role: "Studio · Toulouse", text: "I migrated from Pixieset. Same features, cheaper — and on top of that, there's AI.", avatar: "P", color: "#84CC16" },
+      ],
+    },
     albumSection: {
       badge: "Physical album",
       h2: "From digital to album. In a few clicks.",
@@ -387,27 +394,6 @@ const copy = {
           note: "Free · No account needed · Works immediately",
         },
       },
-    },
-    testimonials: {
-      badge: "They say it better than us",
-      h2: "What our users say",
-      items: [
-        {
-          initials: "A.M.", name: "Antoine M.", role: "Wedding photographer", location: "Lyon", color: "#6366F1",
-          quote: "I delivered Sarah and Thomas's gallery the morning after the wedding at 10am. My clients couldn't believe it. Before Picktur, I needed a full week to cull 4,000 photos — now AI does it while I sleep.",
-          detail: "4,200 photos · Wedding in Lyon · Delivered in 18h",
-        },
-        {
-          initials: "J.P.", name: "Jennifer P.", role: "Bride", location: "Paris", color: "#E879A0",
-          quote: "It had been a year since my wedding and I still hadn't opened my photographer's WeTransfer — even though I'd already paid for physical albums. Picktur let me see my photos in an innovative way, share them with my guests, and finally build my album.",
-          detail: "Bride · Paris · March 2025",
-        },
-        {
-          initials: "M.L.", name: "Marc L.", role: "Guest", location: "Bordeaux", color: "#10B981",
-          quote: "I really didn't expect to find my photos so easily. One selfie from my phone and I had access to every photo I appeared in — in HD. I found some I never would have thought I'd see.",
-          detail: "Guest · Wedding in Gironde",
-        },
-      ],
     },
     faq: {
       h2: "Frequently asked questions",
@@ -851,105 +837,63 @@ function GalleryMock() {
   );
 }
 
-// ─── Testimonials Carousel ────────────────────────────────────────────────────
-const TESTIMONIAL_DELAY = 3000;
+// ─── Testimonials Double Marquee ──────────────────────────────────────────────
+type TestimonialItem = { name: string; role: string; text: string; avatar: string; color: string };
 
-type TestimonialItem = { initials: string; name: string; role: string; location: string; color: string; quote: string; detail: string };
-
-function TestimonialsCarousel({ items, badge, h2 }: { items: TestimonialItem[]; badge: string; h2: string }) {
-  const [active, setActive] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const t = items[active];
-
-  const goTo = (i: number) => { setActive(i); setProgress(0); };
-
-  useEffect(() => {
-    const id = setInterval(() => { setActive((a) => (a + 1) % items.length); setProgress(0); }, TESTIMONIAL_DELAY);
-    return () => clearInterval(id);
-  }, [active]);
-
-  useEffect(() => {
-    setProgress(0);
-    const step = 100 / (TESTIMONIAL_DELAY / 50);
-    const id = setInterval(() => setProgress((p) => Math.min(p + step, 100)), 50);
-    return () => clearInterval(id);
-  }, [active]);
-
+function MarqueeRow({ items, reverse = false }: { items: TestimonialItem[]; reverse?: boolean }) {
+  const doubled = [...items, ...items];
   return (
-    <section className="py-24 px-6 border-t border-stone-100 bg-white">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-full px-3 py-1 text-xs text-amber-600 mb-5">
-            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-            {badge}
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-stone-900">{h2}</h2>
-        </div>
-
-        <div>
-          {/* Tabs */}
-          <div className="flex justify-center gap-3 mb-8 flex-wrap">
-            {items.map((item, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all ${
-                  active === i ? "bg-stone-900 text-white shadow-md" : "bg-stone-50 border border-stone-200 text-stone-500 hover:border-stone-300"
-                }`}
+    <div className="overflow-hidden">
+      <motion.div
+        className="flex gap-4 w-max"
+        animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
+        transition={{ repeat: Infinity, duration: 35, ease: "linear" }}
+      >
+        {doubled.map((t, i) => (
+          <div
+            key={i}
+            className="flex-shrink-0 w-80 bg-white border border-stone-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                style={{ background: t.color }}
               >
-                <span className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0" style={{ background: item.color }}>
-                  {item.initials.split(".")[0]}
-                </span>
-                {item.role}
-              </button>
-            ))}
-          </div>
-
-          {/* Card */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.22 }}
-              className="bg-white border border-stone-200 rounded-2xl p-8 md:p-10 shadow-sm overflow-hidden relative"
-            >
-              <div className="absolute bottom-0 left-0 h-0.5 bg-stone-100 w-full">
-                <div className="h-full bg-stone-400 transition-none" style={{ width: `${progress}%` }} />
+                {t.avatar}
               </div>
-              <Quote className="w-8 h-8 text-stone-100 mb-4" />
-              <p className="text-stone-700 text-lg md:text-xl leading-relaxed mb-8 font-light">"{t.quote}"</p>
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-sm flex-shrink-0" style={{ background: t.color }}>
-                    {t.initials}
-                  </div>
-                  <div>
-                    <div className="font-bold text-stone-900">{t.name}</div>
-                    <div className="text-sm text-stone-400">{t.role} · {t.location}</div>
-                  </div>
-                </div>
-                <div className="text-xs text-stone-300 border border-stone-100 rounded-full px-3 py-1.5 hidden md:block">{t.detail}</div>
+              <div>
+                <div className="text-sm font-semibold text-stone-900">{t.name}</div>
+                <div className="text-xs text-stone-400">{t.role}</div>
               </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Dots + arrows */}
-          <div className="flex justify-center items-center gap-4 mt-6">
-            <button onClick={() => goTo((active - 1 + items.length) % items.length)} className="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center hover:border-stone-400 transition-all bg-white">
-              <ChevronLeft className="w-4 h-4 text-stone-600" />
-            </button>
-            <div className="flex items-center gap-2">
-              {items.map((_, i) => (
-                <button key={i} onClick={() => goTo(i)} className={`rounded-full transition-all ${active === i ? "w-6 h-2 bg-stone-900" : "w-2 h-2 bg-stone-200 hover:bg-stone-300"}`} />
-              ))}
+              <div className="ml-auto flex gap-0.5">
+                {[...Array(5)].map((_, j) => (
+                  <Star key={j} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                ))}
+              </div>
             </div>
-            <button onClick={() => goTo((active + 1) % items.length)} className="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center hover:border-stone-400 transition-all bg-white">
-              <ChevronRight className="w-4 h-4 text-stone-600" />
-            </button>
+            <p className="text-sm text-stone-600 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
           </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+function TestimonialsMarquee({ data }: { data: { badge: string; h2: string; items: TestimonialItem[] } }) {
+  const row1 = data.items.slice(0, 4);
+  const row2 = data.items.slice(4, 8);
+  return (
+    <section className="py-24 border-t border-stone-100 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6 text-center mb-12">
+        <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-full px-3 py-1 text-xs text-amber-600 mb-5">
+          <Heart className="w-3.5 h-3.5" />
+          {data.badge}
         </div>
+        <h2 className="text-3xl md:text-4xl font-bold text-stone-900">{data.h2}</h2>
+      </div>
+      <div className="space-y-4">
+        <MarqueeRow items={row1} reverse={false} />
+        <MarqueeRow items={row2} reverse={true} />
       </div>
     </section>
   );
@@ -1293,6 +1237,9 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Testimonials ── */}
+      <TestimonialsMarquee data={tr.testimonials} />
+
       {/* ── Couples / Affiliation ── */}
       <section className="py-24 px-6 border-t border-stone-100 bg-white">
         <div className="max-w-4xl mx-auto text-center mb-12">
@@ -1329,7 +1276,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Testimonials ── */}
-      <TestimonialsCarousel items={tr.testimonials.items} badge={tr.testimonials.badge} h2={tr.testimonials.h2} />
+      <TestimonialsMarquee data={tr.testimonials} />
 
       {/* ── Pricing ── */}
       <section id="pricing" className="py-24 px-6 border-t border-stone-100">
