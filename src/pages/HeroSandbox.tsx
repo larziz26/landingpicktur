@@ -264,7 +264,16 @@ export function Concept1Fusion({ lang = "fr" }: { lang?: Lang }) {
   };
 
   useEffect(() => {
-    if (inView && phase === "idle") {
+    if (!inView) {
+      clearAllTimers();
+      setPhase("idle");
+      setVisibleAnnotations([]);
+      setDisplayScore(0);
+      setVisibleFaces([]);
+      setActiveGallery(null);
+      return;
+    }
+    if (phase === "idle") {
       t(runSequence, 500);
     }
     return clearAllTimers;
