@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   Camera, Zap, Star, ArrowRight, Check, ChevronDown,
   Globe, Play, ScanFace, BookOpen, Sparkles, Award, Heart,
-  TrendingUp, Gift, ChevronLeft, ChevronRight, Quote
+  TrendingUp, Gift, ChevronLeft, ChevronRight, Quote, X, Loader2, CheckCircle2, AlertCircle
 } from "lucide-react";
 import { Concept1Fusion } from "./pages/HeroSandbox";
 
@@ -209,6 +209,24 @@ const copy = {
       cta: "Commencer gratuitement",
       sub2: "Essai 14 jours · Pas de CB requise",
     },
+    signup: {
+      title: "Créez votre studio",
+      subtitle: "Votre galerie en ligne en 2 minutes",
+      slugLabel: "Identifiant (nom business)",
+      slugPlaceholder: "marie-photo",
+      slugPreviewPrefix: "Votre future galerie :",
+      slugAvailable: "Disponible !",
+      slugTaken: "Déjà pris",
+      slugInvalid: "3-30 caractères, lettres/chiffres/tirets uniquement",
+      emailLabel: "Email professionnel",
+      emailPlaceholder: "marie@studio.fr",
+      passwordLabel: "Mot de passe",
+      passwordPlaceholder: "Minimum 6 caractères",
+      submit: "Créer mon studio et payer →",
+      submitting: "Création en cours...",
+      loginLink: "Déjà un compte ?",
+      loginCta: "Se connecter",
+    },
     footer: {
       tagline: "La plateforme des photographes de mariage modernes.",
       copyright: "© 2025 Picktur · picktur.fr",
@@ -411,6 +429,24 @@ const copy = {
       sub: "Join photographers who deliver their galleries the next day — and whose clients never stop talking about it.",
       cta: "Start for free",
       sub2: "14-day trial · No credit card required",
+    },
+    signup: {
+      title: "Create your studio",
+      subtitle: "Your gallery online in 2 minutes",
+      slugLabel: "Identifier (business name)",
+      slugPlaceholder: "marie-photo",
+      slugPreviewPrefix: "Your future gallery:",
+      slugAvailable: "Available!",
+      slugTaken: "Already taken",
+      slugInvalid: "3-30 characters, letters/numbers/hyphens only",
+      emailLabel: "Professional email",
+      emailPlaceholder: "marie@studio.com",
+      passwordLabel: "Password",
+      passwordPlaceholder: "Minimum 6 characters",
+      submit: "Create my studio & pay →",
+      submitting: "Creating...",
+      loginLink: "Already have an account?",
+      loginCta: "Log in",
     },
     footer: {
       tagline: "The platform for modern wedding photographers.",
@@ -901,13 +937,84 @@ function TestimonialsMarquee({ data }: { data: { badge: string; h2: string; item
 
 // ─── Main Landing Page ────────────────────────────────────────────────────────
 const APP_URL = "https://picktur.com/auth";
-const CHECKOUT_URL = "https://picktur.com/api/subscribe/checkout";
+const API_BASE = "https://picktur.com";
+
+type SlugStatus = "idle" | "checking" | "available" | "taken" | "invalid";
 
 export default function LandingPage() {
   const [lang, setLang] = useState<Lang>("fr");
   const [yearly, setYearly] = useState(false);
   const [aiCulling, setAiCulling] = useState(true);
   const tr = copy[lang];
+
+  // ── Signup modal state ──
+  const [showSignup, setShowSignup] = useState(false);
+  const [signupData, setSignupData] = useState({ username: "", email: "", password: "" });
+  const [slugStatus, setSlugStatus] = useState<SlugStatus>("idle");
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const slugTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounced slug availability check
+  useEffect(() => {
+    const slug = signupData.username.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    if (!slug) { setSlugStatus("idle"); return; }
+    if (!/^[a-z0-9-]{3,30}$/.test(slug)) { setSlugStatus("invalid"); return; }
+    setSlugStatus("checking");
+    if (slugTimerRef.current) clearTimeout(slugTimerRef.current);
+    slugTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/check-slug/${encodeURIComponent(slug)}`);
+        const data = await res.json();
+        setSlugStatus(data.available ? "available" : "taken");
+      } catch { setSlugStatus("idle"); }
+    }, 500);
+    return () => { if (slugTimerRef.current) clearTimeout(slugTimerRef.current); };
+  }, [signupData.username]);
+
+  const handleSignup = async () => {
+    setSignupLoading(true);
+    setSignupError("");
+    try {
+      const regRes = await fetch(`${API_BASE}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: signupData.username.toLowerCase().replace(/[^a-z0-9-]/g, ""),
+          email: signupData.email,
+          password: signupData.password,
+        }),
+      });
+      if (!regRes.ok) {
+        const err = await regRes.json();
+        throw new Error(err.message || (lang === "fr" ? "Erreur lors de l'inscription" : "Registration error"));
+      }
+      const { sessionToken, user } = await regRes.json();
+
+      // Store session before Stripe redirect so auth page can auto-connect on return
+      localStorage.setItem("picktur_session_token", sessionToken);
+      localStorage.setItem("picktur_pending_slug", user.username);
+
+      const checkRes = await fetch(`${API_BASE}/api/subscribe/create-checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-session-token": sessionToken },
+      });
+      if (!checkRes.ok) throw new Error(lang === "fr" ? "Erreur lors de la création du paiement" : "Payment setup error");
+      const { url } = await checkRes.json();
+
+      window.location.href = url;
+    } catch (err: any) {
+      setSignupError(err.message);
+      setSignupLoading(false);
+    }
+  };
+
+  const openSignup = () => {
+    setSignupData({ username: "", email: "", password: "" });
+    setSlugStatus("idle");
+    setSignupError("");
+    setShowSignup(true);
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] text-stone-900 antialiased" style={{ fontFamily: "'Open Sauce Sans', system-ui, sans-serif" }}>
@@ -939,11 +1046,9 @@ export default function LandingPage() {
                 {tr.nav.login}
               </button>
             </a>
-            <a href={APP_URL}>
-              <button className="text-sm bg-stone-900 text-white px-4 py-2 rounded-xl hover:bg-stone-800 transition-all font-medium">
-                {tr.nav.cta}
-              </button>
-            </a>
+            <button onClick={openSignup} className="text-sm bg-stone-900 text-white px-4 py-2 rounded-xl hover:bg-stone-800 transition-all font-medium">
+              {tr.nav.cta}
+            </button>
           </div>
         </div>
       </nav>
@@ -981,12 +1086,10 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
-              <a href={APP_URL}>
-                <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-7 py-3.5 rounded-xl hover:bg-stone-800 transition-all font-medium text-base shadow-md hover:shadow-lg">
-                  {tr.hero.cta1}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </a>
+              <button onClick={openSignup} className="inline-flex items-center gap-2 bg-stone-900 text-white px-7 py-3.5 rounded-xl hover:bg-stone-800 transition-all font-medium text-base shadow-md hover:shadow-lg">
+                {tr.hero.cta1}
+                <ArrowRight className="w-4 h-4" />
+              </button>
               <a href="#features">
                 <button className="inline-flex items-center gap-2 bg-white text-stone-700 border border-stone-200 px-7 py-3.5 rounded-xl hover:bg-stone-50 hover:border-stone-300 transition-all font-medium text-base shadow-sm">
                   <Play className="w-4 h-4 text-rose-500 fill-rose-500" />
@@ -1086,11 +1189,9 @@ export default function LandingPage() {
                 <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">{p}</span>
               ))}
             </div>
-            <a href={APP_URL}>
-              <button className="inline-flex items-center gap-2 text-sm font-medium text-stone-900 hover:gap-3 transition-all">
-                {tr.aiSection.cta} <ArrowRight className="w-4 h-4" />
-              </button>
-            </a>
+            <button onClick={openSignup} className="inline-flex items-center gap-2 text-sm font-medium text-stone-900 hover:gap-3 transition-all">
+              {tr.aiSection.cta} <ArrowRight className="w-4 h-4" />
+            </button>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
             <AIScoringDemo />
@@ -1111,11 +1212,9 @@ export default function LandingPage() {
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-stone-900 leading-tight mb-5">{tr.faceSection.h2}</h2>
             <p className="text-stone-500 leading-relaxed mb-8">{tr.faceSection.sub}</p>
-            <a href={APP_URL}>
-              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 rounded-xl hover:bg-stone-800 transition-all font-medium text-sm">
-                {tr.faceSection.cta} <ArrowRight className="w-4 h-4" />
-              </button>
-            </a>
+            <button onClick={openSignup} className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 rounded-xl hover:bg-stone-800 transition-all font-medium text-sm">
+              {tr.faceSection.cta} <ArrowRight className="w-4 h-4" />
+            </button>
           </motion.div>
         </div>
       </section>
@@ -1228,11 +1327,9 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="text-center mt-8">
-            <a href={APP_URL}>
-              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-7 py-3.5 rounded-xl hover:bg-stone-800 transition-all font-medium text-base shadow-md hover:shadow-lg">
-                {tr.comparison.cta} <ArrowRight className="w-4 h-4" />
-              </button>
-            </a>
+            <button onClick={openSignup} className="inline-flex items-center gap-2 bg-stone-900 text-white px-7 py-3.5 rounded-xl hover:bg-stone-800 transition-all font-medium text-base shadow-md hover:shadow-lg">
+              {tr.comparison.cta} <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </section>
@@ -1352,11 +1449,9 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <a href={`${CHECKOUT_URL}?plan=${(plan as any).slug}`}>
-                  <button className={`w-full py-2.5 rounded-xl font-medium text-sm transition-all ${plan.highlight ? "bg-white text-stone-900 hover:bg-stone-100" : "bg-stone-900 text-white hover:bg-stone-800"}`}>
-                    {plan.cta}
-                  </button>
-                </a>
+                <button onClick={openSignup} className={`w-full py-2.5 rounded-xl font-medium text-sm transition-all ${plan.highlight ? "bg-white text-stone-900 hover:bg-stone-100" : "bg-stone-900 text-white hover:bg-stone-800"}`}>
+                  {plan.cta}
+                </button>
               </motion.div>
             ))}
           </div>
@@ -1457,12 +1552,10 @@ export default function LandingPage() {
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{tr.finalCta.h2}</h2>
               <p className="text-white/60 text-lg mb-10">{tr.finalCta.sub}</p>
-              <a href={APP_URL}>
-                <button className="bg-white text-stone-900 px-10 py-3.5 rounded-xl font-semibold hover:bg-stone-100 transition-all inline-flex items-center gap-2 shadow-lg">
-                  {tr.finalCta.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </a>
+              <button onClick={openSignup} className="bg-white text-stone-900 px-10 py-3.5 rounded-xl font-semibold hover:bg-stone-100 transition-all inline-flex items-center gap-2 shadow-lg">
+                {tr.finalCta.cta}
+                <ArrowRight className="w-4 h-4" />
+              </button>
               <p className="text-white/30 text-xs mt-5">{tr.finalCta.sub2}</p>
             </div>
           </div>
@@ -1492,6 +1585,131 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* ── Signup Modal ── */}
+      <AnimatePresence>
+        {showSignup && (
+          <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowSignup(false)} />
+
+            {/* Card */}
+            <motion.div
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8"
+              initial={{ scale: 0.95, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 10 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            >
+              <button onClick={() => setShowSignup(false)} className="absolute top-4 right-4 p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-all">
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 rounded-md bg-stone-900 flex items-center justify-center">
+                    <Camera className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="font-bold text-stone-900">Picktur</span>
+                </div>
+                <h2 className="text-xl font-bold text-stone-900 mt-3">{tr.signup.title}</h2>
+                <p className="text-sm text-stone-500 mt-0.5">{tr.signup.subtitle}</p>
+              </div>
+
+              <div className="space-y-4">
+                {/* Slug field */}
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">{tr.signup.slugLabel}</label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder={tr.signup.slugPlaceholder}
+                      value={signupData.username}
+                      onChange={e => setSignupData(d => ({ ...d, username: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "") }))}
+                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900/20 focus:border-stone-400 transition-all"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      {slugStatus === "checking" && <Loader2 className="w-4 h-4 text-stone-400 animate-spin" />}
+                      {slugStatus === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                      {(slugStatus === "taken" || slugStatus === "invalid") && <AlertCircle className="w-4 h-4 text-rose-500" />}
+                    </div>
+                  </div>
+                  {/* Live slug preview */}
+                  {signupData.username && (
+                    <div className={`mt-1.5 text-xs flex items-center gap-1.5 ${slugStatus === "available" ? "text-emerald-600" : slugStatus === "taken" ? "text-rose-500" : slugStatus === "invalid" ? "text-rose-500" : "text-stone-400"}`}>
+                      {slugStatus === "available" && (
+                        <>
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>{tr.signup.slugAvailable}</span>
+                          <span className="text-stone-400 mx-1">·</span>
+                          <span className="text-stone-500">{tr.signup.slugPreviewPrefix} <strong className="text-stone-800">{signupData.username}</strong>.picktur.com</span>
+                        </>
+                      )}
+                      {slugStatus === "taken" && <><AlertCircle className="w-3 h-3" />{tr.signup.slugTaken}</>}
+                      {slugStatus === "invalid" && <><AlertCircle className="w-3 h-3" />{tr.signup.slugInvalid}</>}
+                      {slugStatus === "checking" && <span className="text-stone-400">{signupData.username}.picktur.com</span>}
+                      {slugStatus === "idle" && <span>{signupData.username}.picktur.com</span>}
+                    </div>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">{tr.signup.emailLabel}</label>
+                  <input
+                    type="email"
+                    placeholder={tr.signup.emailPlaceholder}
+                    value={signupData.email}
+                    onChange={e => setSignupData(d => ({ ...d, email: e.target.value }))}
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900/20 focus:border-stone-400 transition-all"
+                  />
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">{tr.signup.passwordLabel}</label>
+                  <input
+                    type="password"
+                    placeholder={tr.signup.passwordPlaceholder}
+                    value={signupData.password}
+                    onChange={e => setSignupData(d => ({ ...d, password: e.target.value }))}
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900/20 focus:border-stone-400 transition-all"
+                  />
+                </div>
+
+                {/* Error */}
+                {signupError && (
+                  <div className="flex items-start gap-2 text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3">
+                    <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                    {signupError}
+                  </div>
+                )}
+
+                {/* Submit */}
+                <button
+                  onClick={handleSignup}
+                  disabled={signupLoading || slugStatus !== "available" || !signupData.email || signupData.password.length < 6}
+                  className="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-stone-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {signupLoading ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" />{tr.signup.submitting}</>
+                  ) : (
+                    tr.signup.submit
+                  )}
+                </button>
+
+                <p className="text-center text-xs text-stone-400">
+                  {tr.signup.loginLink}{" "}
+                  <a href={APP_URL} className="text-stone-600 underline underline-offset-2 hover:text-stone-900">{tr.signup.loginCta}</a>
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
